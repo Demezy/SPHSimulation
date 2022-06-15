@@ -32,7 +32,7 @@ library
       src
   build-depends:
       base >=4.7 && <5
-    , gloss
+    , gloss >=1.13
   default-language: Haskell2010
 
 executable SPHSimulation-exe
@@ -45,7 +45,7 @@ executable SPHSimulation-exe
   build-depends:
       SPHSimulation
     , base >=4.7 && <5
-    , gloss
+    , gloss >=1.13
   default-language: Haskell2010
 
 test-suite SPHSimulation-test
@@ -59,5 +59,5 @@ test-suite SPHSimulation-test
   build-depends:
       SPHSimulation
     , base >=4.7 && <5
-    , gloss
+    , gloss >=1.13
   default-language: Haskell2010
