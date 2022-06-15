@@ -26,6 +26,7 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Objects
   other-modules:
       Paths_SPHSimulation
   hs-source-dirs:
