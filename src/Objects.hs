@@ -1,8 +1,8 @@
 module Objects
-    ( Particle (Particle, position, velocity, mass)
+    ( Particle (Particle, position, velocity, mass, config, renderParticle)
     , FluidConfig (FluidConfig, stiffness, density, viscosity, tension,
                    densityKernel, pressureKernel, viscosityKernel, tensionKernel)
-    , Fluid (Fluid, particles, config, smoothingLength, renderParticle)
+    , Fluid (Fluid, particles, smoothingLength)
     ) where
 
 import Graphics.Gloss
@@ -11,8 +11,9 @@ data Particle = Particle
   { position :: Point
   , velocity :: Vector
   , mass :: Float
+  , config :: FluidConfig
+  , renderParticle :: Particle -> Picture
   }
-  deriving (Eq)
   
 type KernelFunc = Vector -> Float -> Float
 
@@ -27,9 +28,8 @@ data FluidConfig = FluidConfig
   , tensionKernel :: KernelFunc
   }
 
+-- | Storage for all fluids (even of different types)
 data Fluid = Fluid
   { particles :: [Particle]
-  , config :: FluidConfig
   , smoothingLength :: Float
-  , renderParticle :: Particle -> Picture
   }
