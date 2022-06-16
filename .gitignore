@@ -29,3 +29,6 @@ cabal.project.local~
 # Obsidian
 Knowledge\ Base/.obsidian
 Knowledge\ Base/.trash
+
+# IDE specific
+.idea
