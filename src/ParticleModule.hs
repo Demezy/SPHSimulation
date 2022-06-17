@@ -3,15 +3,10 @@ module ParticleModule where
 import Graphics.Gloss
 import Objects
 
-renderParticle :: Particle -> Picture
-renderParticle particle = coloredParticle
-  where
-    coloredParticle = color c (circle 20)
-    c = coloring particle
-
 renderParticleAt :: Particle -> Picture
-renderParticleAt particle = translate dx dy (renderParticle particle)
+renderParticleAt particle = translate dx dy (rendering particle)
   where
+    rendering = renderParticle particle
     point = position particle
     dx = fst point
     dy = snd point

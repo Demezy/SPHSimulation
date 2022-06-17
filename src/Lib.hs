@@ -7,7 +7,7 @@ import ParticleModule
 import Objects
 
 window :: Display
-window = InWindow "Nice Window" (200, 200) (10, 10)
+window = InWindow "Nice Window" (1700, 1900) (10, 10)
 
 background :: Color
 background = white
@@ -21,17 +21,23 @@ sampleParticle = Particle {
   , velocity = (1, 1)
   , mass = 42 
   , config = undefined
-  , coloring = black
+  , renderParticle = rendering 
   }
 
 sampleParticle2 :: Particle
 sampleParticle2 = Particle {
-    position= (5, 5)
+    position= (90, 0)
   , velocity = (1, 1)
   , mass = 42 
   , config = undefined
-  , coloring = yellow
+  , renderParticle = rendering 
   }
+
+rendering :: Particle -> Picture
+rendering particle = coloredParticle
+  where
+    coloredParticle = color black (thickCircle 20 90)
+
 
 
 glossExample :: IO ()
