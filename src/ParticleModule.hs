@@ -4,7 +4,10 @@ import Graphics.Gloss
 import Objects
 
 renderParticle :: Particle -> Picture
-renderParticle _particle = circle 20
+renderParticle particle = coloredParticle
+  where
+    coloredParticle = color c (circle 20)
+    c = coloring particle
 
 renderParticleAt :: Particle -> Picture
 renderParticleAt particle = translate dx dy (renderParticle particle)

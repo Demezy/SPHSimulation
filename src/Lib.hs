@@ -21,6 +21,7 @@ sampleParticle = Particle {
   , velocity = (1, 1)
   , mass = 42 
   , config = undefined
+  , coloring = black
   }
 
 sampleParticle2 :: Particle
@@ -29,8 +30,10 @@ sampleParticle2 = Particle {
   , velocity = (1, 1)
   , mass = 42 
   , config = undefined
+  , coloring = yellow
   }
 
 
 glossExample :: IO ()
 glossExample = display window background ((renderParticleAt sampleParticle) <> (renderParticleAt sampleParticle2))
+-- glossExample = display window background drawing
