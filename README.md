@@ -10,4 +10,5 @@ or
 `cabal run SPHSimulation-exe`
 
 In case of problems try to install `freeglut` package
+
 `sudo pacman -Sy freeglut`
