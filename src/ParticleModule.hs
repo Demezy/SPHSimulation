@@ -4,7 +4,10 @@ import Graphics.Gloss
 import Objects
 
 renderParticle :: Particle -> Picture
-renderParticle particle = translate dx dy (circle 80)
+renderParticle _particle = circle 20
+
+renderParticleAt :: Particle -> Picture
+renderParticleAt particle = translate dx dy (renderParticle particle)
   where
     point = position particle
     dx = fst point
