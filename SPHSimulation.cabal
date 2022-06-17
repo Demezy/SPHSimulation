@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Objects
+      ParticleModule
   other-modules:
       Paths_SPHSimulation
   hs-source-dirs:
