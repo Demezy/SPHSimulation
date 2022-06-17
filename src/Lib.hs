@@ -19,7 +19,6 @@ sampleParticle :: Particle
 sampleParticle = Particle {
     position= (1, 1)
   , velocity = (1, 1)
-  , mass = 42 
   , config = undefined
   , renderParticle = rendering 
   }
@@ -28,7 +27,6 @@ sampleParticle2 :: Particle
 sampleParticle2 = Particle {
     position= (90, 0)
   , velocity = (1, 1)
-  , mass = 42 
   , config = undefined
   , renderParticle = rendering 
   }
