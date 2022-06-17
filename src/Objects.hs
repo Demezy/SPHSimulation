@@ -34,6 +34,14 @@ data Fluid = Fluid
   , smoothingLength :: Float
   }
 
+-- | Storage for all walls
+data Walls = Walls
+  { rectangles :: [Integer] 
+  }
+
 data Universe = Universe
-  { fluid :: Fluid
+  { timeMultiplier :: Float
+  , gravityAcceleration :: (Vector, Float)
+  , fluid :: Fluid
+  , walls :: Walls
   }
