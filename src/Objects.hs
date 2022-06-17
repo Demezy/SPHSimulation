@@ -1,5 +1,5 @@
 module Objects
-    ( Particle (Particle, position, velocity, mass, config, renderParticle)
+    ( Particle (Particle, position, velocity, mass, config)
     , FluidConfig (FluidConfig, stiffness, density, viscosity, tension,
                    densityKernel, pressureKernel, viscosityKernel, tensionKernel)
     , Fluid (Fluid, particles, smoothingLength)
@@ -12,7 +12,6 @@ data Particle = Particle
   , velocity :: Vector
   , mass :: Float
   , config :: FluidConfig
-  , renderParticle :: Particle -> Picture
   }
   
 type KernelFunc = Vector -> Float -> Float
