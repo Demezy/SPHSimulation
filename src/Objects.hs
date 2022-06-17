@@ -41,7 +41,7 @@ data Walls = Walls
 
 data Universe = Universe
   { timeMultiplier :: Float
-  , gravityAcceleration :: (Vector, Float)
+  , gravityAcceleration :: Vector 
   , fluid :: Fluid
   , walls :: Walls
   }
