@@ -4,36 +4,74 @@ module Lib
 
 import Graphics.Gloss
 import Objects
+import RenderingOfUniverse
 
 window :: Display
 window = InWindow "Nice Window" (1700, 1900) (10, 10)
 
 background :: Color
-background = white
+background = blue
 
 drawing :: Picture
 drawing = circle 80
 
+universe :: Universe
+universe = Universe
+  { simulationScale = (1,1)
+  , enviroment      = env
+  , fluid           = [sampleParticle, sampleParticle2]
+  , walls           = undefined
+  }
+
+env :: Enviroment
+env = Enviroment
+  { timeMultiplier      = 1
+  , directionOfGravity  = (1, 1)
+  , gravityAcceleration = 1
+  , densityOfEnviroment = 1
+  }
+
 sampleParticle :: Particle
-sampleParticle = Particle {
-    position= (1, 1)
-  , velocity = (1, 1)
-  , config = undefined
+sampleParticle = Particle
+  { position   = (0, 0)
+  , velocity   = (1, 1)
+  , config     = conf1
   }
 
 sampleParticle2 :: Particle
-sampleParticle2 = Particle {
-    position= (90, 0)
-  , velocity = (1, 1)
-  , config = undefined
+sampleParticle2 = Particle
+  { position   = (90, 0)
+  , velocity   = (1, 1)
+  , config     = conf2
   }
 
-rendering :: Particle -> Picture
-rendering particle = coloredParticle
-  where
-    coloredParticle = color black (thickCircle 20 90)
+conf1 :: FluidConfig
+conf1 = FluidConfig
+  { coloring        = black
+  , stiffness       = undefined
+  , smoothingLength = undefined
+  , mass            = undefined
+  , viscosity       = undefined
+  , surfaceTension  = undefined
+  , densityKernel   = undefined
+  , pressureKernel  = undefined
+  , viscosityKernel = undefined
+  , tensionKernel   = undefined
+  }
 
-
+conf2 :: FluidConfig
+conf2 = FluidConfig
+  { coloring        = red
+  , stiffness       = undefined
+  , smoothingLength = undefined
+  , mass            = undefined
+  , viscosity       = undefined
+  , surfaceTension  = undefined
+  , densityKernel   = undefined
+  , pressureKernel  = undefined
+  , viscosityKernel = undefined
+  , tensionKernel   = undefined
+  }
 
 glossExample :: IO ()
-glossExample = display window background (rendering sampleParticle)
+glossExample = display window background (renderParticles universe) 
