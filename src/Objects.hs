@@ -7,6 +7,8 @@ module Objects
     , FluidConfig (FluidConfig, coloring, stiffness, smoothingLength, mass,
                    viscosity, surfaceTension, densityKernel, pressureKernel,
                    viscosityKernel, tensionKernel)
+    , Force
+    , KernelFunc
     ) where
 
 import Graphics.Gloss

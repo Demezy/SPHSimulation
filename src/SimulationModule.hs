@@ -1,17 +1,20 @@
+{-# OPTIONS_GHC -fdefer-typed-holes -fshow-hole-constraints -funclutter-valid-hole-fits #-}
+
 module SimulationModule where
 
 import Objects
+import Graphics.Gloss
 
-Ai :: (Particle -> Position -> value)
-Ai = _
+-- TODO Check value type
+type Ai = (Particle -> Point -> Float)
 
-densityOfParticle :: Particle -> Value
+densityOfParticle :: Particle -> value
 densityOfParticle = _
 
-findNeighbours :: Position -> smoothingLength -> [Particle]
+findNeighbours :: position -> smoothingLength -> [Particle]
 findNeighbours = _
 
-valueAtPoint :: Position -> smothering Length -> Kernel function -> Ai (see below) -> value
+valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
 valueAtPoint = _
 
 pressureOfParticle :: Particle -> Environment -> value
