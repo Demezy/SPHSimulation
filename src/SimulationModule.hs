@@ -2,6 +2,9 @@ module SimulationModule where
 
 import Objects
 
+Ai :: (Particle -> Position -> value)
+Ai = _
+
 densityOfParticle :: Particle -> Value
 densityOfParticle = _
 
@@ -13,9 +16,6 @@ valueAtPoint = _
 
 pressureOfParticle :: Particle -> Environment -> value
 pressureOfParticle = _
-
-Ai :: (Particle -> Position -> value)
-Ai = _
 
 gravityForceOfParticle :: Particle -> Environment -> Force
 gravityForceOfParticle = _
