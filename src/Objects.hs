@@ -1,47 +1,53 @@
 module Objects
-    ( Particle (Particle, position, velocity, config, renderParticle)
-    , FluidConfig (FluidConfig, stiffness, density, viscosity, tension,
+    ( Universe (Universe, simulationScale, enviroment, fluid, walls)
+    , Particle (Particle, position, velocity, config)
+    , Solid (Solid, isMovable, shape, renderFunction)
+    , Enviroment (Enviroment, timeMultiplier, directionOfGravity, gravityAcceleration, densityOfEnviroment)
+    , FluidConfig (FluidConfig, stiffness, smoothingLength, mass, viscosity, surfaceTension,
                    densityKernel, pressureKernel, viscosityKernel, tensionKernel)
-    , Fluid (Fluid, particles, smoothingLength)
     ) where
 
 import Graphics.Gloss
-  
+
+data Universe = Universe
+  { simulationScale :: (Float, Float)
+  , enviroment      :: Enviroment
+  , fluid           :: [Particle]
+  , walls           :: [Solid]
+  }
+
 data Particle = Particle
   { position :: Point
   , velocity :: Vector
-  , config :: FluidConfig
-  , renderParticle :: Particle -> Picture
+  , config   :: FluidConfig
   }
-  
-type KernelFunc = Vector -> Float -> Float
+
+data Solid = Solid 
+  { isMovable      :: Bool
+  , shape          :: Bool -- | placeholder 
+  , renderFunction :: Solid -> Picture
+  }
+
+data Enviroment = Enviroment
+  { timeMultiplier      :: Float
+  , directionOfGravity  :: Vector 
+  , gravityAcceleration :: Float 
+  , densityOfEnviroment :: Float
+  }
 
 data FluidConfig = FluidConfig
-  { stiffness :: Float
-  , density :: Float
-  , mass :: Float
-  , viscosity :: Float
-  , tension :: Float
-  , densityKernel :: KernelFunc
-  , pressureKernel :: KernelFunc
-  , viscosityKernel :: KernelFunc
-  , tensionKernel :: KernelFunc
-  }
-
--- | Storage for all fluids (even of different types)
-data Fluid = Fluid
-  { particles :: [Particle]
+  { coloring        :: Color
+  , stiffness       :: Float
   , smoothingLength :: Float
+  , mass            :: Float
+  , viscosity       :: Float
+  , surfaceTension  :: Float
+  , densityKernel   :: KernelFunc
+  , pressureKernel  :: KernelFunc
+  , viscosityKernel :: KernelFunc
+  , tensionKernel   :: KernelFunc
   }
 
--- | Storage for all walls
-data Walls = Walls
-  { rectangles :: [Integer] 
-  }
+type KernelFunc = Vector -> Float -> Float
 
-data Universe = Universe
-  { timeMultiplier :: Float
-  , gravityAcceleration :: Vector 
-  , fluid :: Fluid
-  , walls :: Walls
-  }
+type Force = Vector

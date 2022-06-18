@@ -3,7 +3,6 @@ module Lib
     ) where
 
 import Graphics.Gloss
-import ParticleModule
 import Objects
 
 window :: Display
@@ -20,7 +19,6 @@ sampleParticle = Particle {
     position= (1, 1)
   , velocity = (1, 1)
   , config = undefined
-  , renderParticle = rendering 
   }
 
 sampleParticle2 :: Particle
@@ -28,7 +26,6 @@ sampleParticle2 = Particle {
     position= (90, 0)
   , velocity = (1, 1)
   , config = undefined
-  , renderParticle = rendering 
   }
 
 rendering :: Particle -> Picture
@@ -39,5 +36,4 @@ rendering particle = coloredParticle
 
 
 glossExample :: IO ()
-glossExample = display window background ((renderParticleAt sampleParticle) <> (renderParticleAt sampleParticle2))
--- glossExample = display window background drawing
+glossExample = display window background (rendering sampleParticle)
