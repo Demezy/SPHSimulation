@@ -27,6 +27,7 @@ library
   exposed-modules:
       Lib
       Objects
+      RenderingOfUniverse
   other-modules:
       Paths_SPHSimulation
   hs-source-dirs:
