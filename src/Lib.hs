@@ -6,6 +6,8 @@ import Graphics.Gloss.Interface.Pure.Game
 import RenderingOfUniverse
 import Graphics.Gloss
 import Objects
+import TimeModule
+import SimulationModule
 
 uni :: Universe
 uni = Universe
@@ -88,7 +90,15 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
 
 -- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
-simulation dt universe = universe
+simulation dt universe = universe{fluid = particlesNew}
+  where
+    particlesOld = fluid universe
+    env = environment universe
+    particlesNew = map (applyVelocity' . applyForces') particlesOld
+    applyVelocity' p = applyVelocity p dt
+    -- applyForces' p = applyForce p (_totalForces p) dt
+    applyForces' p = p
+
 
 -- Events ---------------------------------------------------------------------
 handleEvent :: Event -> Universe -> Universe
