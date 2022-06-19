@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -fdefer-typed-holes -fshow-hole-constraints -funclutter-valid-hole-fits #-}
-
 module SimulationModule where
 
 import Objects
@@ -57,5 +55,14 @@ pressureOfParticle pList p env = pStiffness * (pDensity - envDensity)
         pStiffness = stiffness (config p)
 
 
+
 gravityForceOfParticle :: Particle -> Environment -> Force
-gravityForceOfParticle = undefined
+gravityForceOfParticle particle env = (scalar * x, scalar * y)
+ where
+  g = gravityAcceleration env 
+  massParticle = (mass . config) particle
+  scalar = g * massParticle
+  directionGravity = directionOfGravity env 
+  x = fst directionGravity
+  y = snd directionGravity
+
