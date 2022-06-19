@@ -74,4 +74,4 @@ conf2 = FluidConfig
   }
 
 glossExample :: IO ()
-glossExample = display window background (renderParticles universe) 
+glossExample = display window background (renderUniverse universe) 

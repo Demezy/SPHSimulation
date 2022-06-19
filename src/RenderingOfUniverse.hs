@@ -14,20 +14,20 @@ render from to oldColor = map (color newColor . renderParticle) listOfRadiuses
    -- phases = reverse (take ((floor to) * 20) (iteration from to to))
    -- iteration from to phase = (interpolate from to phase) : iteration from to (phase - (to / 10))
     renderParticle radius = thickCircle ((radius + 1) / 2) (radius + 1)
-    listOfRadiuses = [0..to]
-    rgba     = rgbaOfColor oldColor
+    listOfRadiuses        = [0..to]
     newColor = makeColor r g b a
-    r = f rgba
-    g = s rgba
-    b = t rgba
-    a = 1 / to
+    rgba     = rgbaOfColor oldColor
+    r        = firstOfTuple rgba
+    g        = secondOfTuple rgba
+    b        = thirdOfTuple rgba
+    a        = 1 / to
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 radius colorr)
+renderParticle particle = pictures (render 0 radius oldColor)
   where
-    colorr = coloring (config particle)
-    radius = 100
+    oldColor = coloring (config particle)
+    radius   = 100
 
 -- | Render Particle at given coordinates.
 renderParticleAt :: Particle -> Picture
@@ -37,9 +37,13 @@ renderParticleAt particle = translate dx dy(renderParticle particle)
     dx         = fst coordinate
     dy         = snd coordinate
 
--- | Render fluid from all Universe.
-renderParticles :: Universe -> Picture
-renderParticles universe = pictures(map renderParticleAt particles)
+-- | Render Particles.
+renderParticles :: [Particle] -> Picture
+renderParticles particles = pictures (map renderParticleAt particles)
+
+-- | Render whole Universe.
+renderUniverse :: Universe -> Picture
+renderUniverse universe = renderParticles particles
   where
     particles = fluid universe
-
+    solids    = walls universe
