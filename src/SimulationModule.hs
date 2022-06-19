@@ -52,40 +52,49 @@ pressureOfParticle pList p env = pStiffness * (pDensity - envDensity)
 
 
 -- Base function to calculate formula SumI(W(...)*m*(...))
-baseSumFormula :: [Particle] -- pList
-               -> Particle -- particle
-               -> ([Particle] -> Particle -> Float) -- pass densityOfParticle by default
-               -> KernelFunc
+baseSumFormula :: [Particle]
+               -> Point
+               -> ([Particle] -> Point -> Float) -- pass densityOfParticle by default
+               -> (FluidConfig -> KernelFunc)
                -> (Particle -> Float) -- Ai
                -> Float
-baseSumFormula pList p densityF kernelFunc ai = result neighParticles resI
+baseSumFormula pList pos densityF kernelType ai = result neighParticles resI
     where
-        pPos = position p
-        pSmoothingLength = smoothingLength (config p)
-        neighParticles = findNeighbours pList pPos pSmoothingLength
+        pSmoothingLength = smoothingLength (config (pList !! 0))
+        neighParticles = findNeighbours pList pos pSmoothingLength
 
         rDiff :: Particle -> Vector
-        rDiff pI = vectorDifference pPos (position pI)
+        rDiff pI = vectorDifference pos (position pI)
 
-        resI :: Particle -> Float
-        resI pI = (mass (config pI) * (ai pI) / (densityF pList pI))
+        resI :: Particle -> (FluidConfig -> KernelFunc) -> Float
+        resI pI kernelType = (mass (config pI) * (ai pI) / (densityF pList pos))
                         * kernelFunc (vectorMagnitude (rDiff pI)) pSmoothingLength
+            where
+                kernelFunc = kernelType (config pI)
 
-        result :: [Particle] -> (Particle -> Float) -> Float
-        result (p : ps) pFunc = pFunc p + result ps pFunc
+        result :: [Particle] -> (Particle -> (FluidConfig -> KernelFunc) -> Float) -> Float
+        result (p : ps) pFunc = pFunc p kernelType + result ps pFunc
+            where
 
-densityOfParticle :: [Particle] -> Particle -> Float
-densityOfParticle pList p = baseSumFormula pList p densityF kernelFunc ai
+
+densityAtPoint :: [Particle] -> Point -> Float
+densityAtPoint pList pos = baseSumFormula pList pos densityF densityKernel ai
     where
-        kernelFunc = densityKernel (config p)
         densityF = (\_ _ -> 1.0)
         ai = (\_ -> 1.0)
 
-pressureAtPoint :: [Particle] -> Particle -> Environment -> Float
-pressureAtPoint pList p env = baseSumFormula pList p densityOfParticle kernelFunc ai
+densityOfParticle :: [Particle] -> Particle -> Float
+densityOfParticle pList p = densityAtPoint pList (position p)
+
+pressureAtPoint :: [Particle] -> Point -> Environment -> Float
+pressureAtPoint pList pos env = baseSumFormula pList pos densityAtPoint pressureKernel ai
     where
-        kernelFunc = pressureKernel (config p)
         ai pI = pressureOfParticle pList pI env
+
+pressureForceAtPoint :: [Particle] -> Point -> Environment -> Float
+pressureForceAtPoint pList pos env = baseSumFormula pList pos densityAtPoint pressureKernel ai
+    where
+        ai pI = (pressureAtPoint pList pos env + pressureOfParticle pList pI env) / 2
 
 
 gravityForceOfParticle :: Particle -> Environment -> Force
