@@ -14,7 +14,7 @@ In case of problems try to install `freeglut` package
 `sudo pacman -Sy freeglut`
 
 # Add new file
-1. Add \<newFile\>.hs to the directory - "~/SPHSimulation/src/" (Name the file with a capital first letter)
+1. Add \<NewFileName\>.hs to the directory - "~/SPHSimulation/src/" (Name the file with a capital first letter)
 2. Add to the head of new file:
 ```hs
  module NewFileName where
@@ -31,5 +31,5 @@ In case of problems try to install `freeglut` package
   exposed-modules:
       Lib
       Objects
-      NewFile
+      NewFileName
 ```
