@@ -3,6 +3,7 @@ module RenderingOfUniverse where
 import Graphics.Gloss
 import Objects
 import Data.Tuple
+import UsefulFunctions
 
 interpolate :: Float -> Float -> Float -> Float
 interpolate from to phase = ((to - from) * phase + from) / 100
@@ -20,18 +21,6 @@ render from to oldColor = map (color newColor . renderParticle) listOfRadiuses
     g = s rgba
     b = t rgba
     a = 1 / to
-
--- | First element in four elements tuple. 
-f :: (a,b,c,d) -> a
-f (x, _, _, _) = x
-
--- | Second element in four elements tuple. 
-s :: (a,b,c,d) -> b
-s (_, x, _, _) = x
-
--- | Third element in four elements tuple. 
-t :: (a,b,c,d) -> c
-t (_, _, x, _) = x
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
