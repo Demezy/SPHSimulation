@@ -37,9 +37,19 @@ renderParticleAt particle = translate dx dy(renderParticle particle)
     dx         = fst coordinate
     dy         = snd coordinate
 
--- | Render Particles.
+-- | Render all Particles into Universe.
 renderParticles :: [Particle] -> Picture
 renderParticles particles = pictures (map renderParticleAt particles)
+
+-- | Render Solid by itself.
+renderSolid :: Solid -> Picture
+renderSolid solid = rendering solid  
+  where
+    rendering = renderFunction solid
+
+-- | Render all Solids into Universe.
+renderSolids :: [Solid] -> Picture
+renderSolids solids = pictures (map renderSolid solids)
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
