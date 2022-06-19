@@ -1,9 +1,9 @@
 module RenderingOfUniverse where
 
-import Data.Tuple
-import Graphics.Gloss
-import Objects
 import UsefulFunctions
+import Graphics.Gloss
+import Data.Tuple
+import Objects
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -34,21 +34,7 @@ interpolationList intFunction from to iterations = reverse (constuctList [])
       | otherwise = l
     step n = fromIntegral n / fromIntegral iterations
 
--- render :: Float -> Float -> Color -> [Picture]
--- render from to oldColor = map (color newColor . renderParticle) listOfRadiuses
---   where
---     -- phases = reverse (take ((floor to) * 20) (iteration from to to))
---     -- iteration from to phase = (interpolate from to phase) : iteration from to (phase - (to / 10))
---     renderParticle radius = thickCircle ((radius + 1) / 2) (radius + 1)
---     -- listOfRadiuses = [0 .. to]
---     listOfRadiuses = interpolationList linearInterpolation 0 to iterations
---     iterations = 100
---     newColor = makeColor r g b a
---     rgba = rgbaOfColor oldColor
---     r = firstOfTuple rgba
---     g = secondOfTuple rgba
---     b = thirdOfTuple rgba
---     a = 1 / to
+-- | Create a picture by using interpolation function.
 render :: Float -> Float -> Color -> [Picture]
 render from to oldColor = map renderCircle circleTuple
   where
