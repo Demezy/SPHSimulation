@@ -32,6 +32,9 @@ densityOfParticle p = overallSum neighParticles sumElemI
         overallSum :: [Particle] -> (Particle -> Float) -> Float
         overallSum (p : ps) pFunc = (pFunc p) + (overallSum ps pFunc)
 
+        -- appliedList = map sumElemI neighParticles
+        -- overallSum = foldl (+) 0 appliedList
+
 
 findNeighbours :: position -> smoothingLength -> [Particle]
 findNeighbours = undefined
