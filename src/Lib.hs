@@ -2,24 +2,15 @@ module Lib
     ( glossExample
     ) where
 
+import Graphics.Gloss.Interface.Pure.Game
+import RenderingOfUniverse
 import Graphics.Gloss
 import Objects
-import RenderingOfUniverse
-import Graphics.Gloss.Interface.Pure.Game
-
-window :: Display
-window = InWindow "Nice Window" (1700, 1900) (10, 10)
-
-background :: Color
-background = blue
-
-drawing :: Picture
-drawing = circle 80
 
 uni :: Universe
 uni = Universe
   { simulationScale = (1,1)
-  , environment      = env
+  , environment     = env
   , fluid           = [sampleParticle, sampleParticle2]
   , walls           = [wall] 
   }
@@ -36,9 +27,9 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier      = 1
-  , directionOfGravity  = (1, 1)
-  , gravityAcceleration = 1
+  { timeMultiplier       = 1
+  , directionOfGravity   = (1, 1)
+  , gravityAcceleration  = 1
   , densityOfEnvironment = 1
   }
 
@@ -51,9 +42,9 @@ sampleParticle = Particle
 
 sampleParticle2 :: Particle
 sampleParticle2 = Particle
-  { position   = (90, 0)
-  , velocity   = (1, 1)
-  , config     = conf2
+  { position    = (90, 0)
+  , velocity    = (1, 1)
+  , config      = conf2
   }
 
 conf1 :: FluidConfig
@@ -87,14 +78,15 @@ conf2 = FluidConfig
 glossExample :: IO ()
 glossExample = play window background fps initialWorld renderWorld handleWorld updateWorld
  where
-        window          = FullScreen
-        background      = blue
-        fps             = 60
-        initialWorld = uni
-        renderWorld world       = renderUniverse world
+        window                  = FullScreen
+        background              = blue
+        fps                     = 60
+        initialWorld            = uni
+        renderWorld       world = renderUniverse world
         handleWorld event world = handleEvent event world
-        updateWorld dt world    = simulation dt world
+        updateWorld dt    world = simulation dt world
 
+-- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
 simulation dt universe = universe
 
@@ -102,4 +94,3 @@ simulation dt universe = universe
 handleEvent :: Event -> Universe -> Universe
 handleEvent event universe = universe
 
---display window background (renderUniverse universe) 
