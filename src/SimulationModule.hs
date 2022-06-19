@@ -21,7 +21,7 @@ densityOfParticle p = overallSum neighParticles sumElemI
     where
         pPos = position p
         pSmoothingLength = smoothingLength (config p)
-        neighParticles = findNeighbours pPos pSmoothingLength
+        neighParticles = findNeighbors pPos pSmoothingLength
 
         rDiff :: Particle -> Vector
         rDiff pI = vectorDifference pPos (position pI)
@@ -36,8 +36,10 @@ densityOfParticle p = overallSum neighParticles sumElemI
         -- overallSum = foldl (+) 0 appliedList
 
 
-findNeighbours :: position -> smoothingLength -> [Particle]
-findNeighbours = undefined
+findNeighbors :: position -- ^ 
+  -> smoothingLength -- ^ 
+  -> [Particle]
+findNeighbors = undefined
 
 valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
 valueAtPoint = undefined
