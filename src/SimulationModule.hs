@@ -9,16 +9,16 @@ import Graphics.Gloss
 type Ai = (Particle -> Point -> Float)
 
 densityOfParticle :: Particle -> value
-densityOfParticle = _
+densityOfParticle = undefined 
 
 findNeighbours :: position -> smoothingLength -> [Particle]
-findNeighbours = _
+findNeighbours = undefined
 
 valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
-valueAtPoint = _
+valueAtPoint = undefined
 
 pressureOfParticle :: Particle -> Environment -> value
-pressureOfParticle = _
+pressureOfParticle = undefined
 
 gravityForceOfParticle :: Particle -> Environment -> Force
-gravityForceOfParticle = _
+gravityForceOfParticle = undefined
