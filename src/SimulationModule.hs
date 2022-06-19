@@ -8,8 +8,30 @@ import Graphics.Gloss
 -- TODO Check value type
 type Ai = (Particle -> Point -> Float)
 
-densityOfParticle :: Particle -> value
-densityOfParticle = undefined 
+-- TODO Implement or use existing func from any library
+vectorDifference :: Point -> Point -> Vector
+vectorDifference = undefined
+
+-- TODO Implement
+kernelFunction :: KernelFunc
+kernelFunction = undefined
+
+densityOfParticle :: Particle -> Float
+densityOfParticle p = overallSum neighParticles sumElemI
+    where
+        pPos = position p
+        pSmoothingLength = smoothingLength (config p)
+        neighParticles = findNeighbours pPos pSmoothingLength
+
+        rDiff :: Particle -> Vector
+        rDiff pI = vectorDifference pPos (position pI)
+
+        sumElemI :: Particle -> Float
+        sumElemI pI = (mass (config pI)) * kernelFunction (rDiff pI) pSmoothingLength
+
+        overallSum :: [Particle] -> (Particle -> Float) -> Float
+        overallSum (p : ps) pFunc = (pFunc p) + (overallSum ps pFunc)
+
 
 findNeighbours :: position -> smoothingLength -> [Particle]
 findNeighbours = undefined
