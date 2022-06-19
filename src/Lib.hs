@@ -20,8 +20,18 @@ universe = Universe
   { simulationScale = (1,1)
   , environment      = env
   , fluid           = [sampleParticle, sampleParticle2]
-  , walls           = undefined
+  , walls           = [wall] 
   }
+
+wall :: Solid
+wall = Solid
+  { isMovable      = True
+  , shape          = rectanglePath 10 10
+  , renderFunction = rf
+  }
+
+rf :: Solid -> Picture
+rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
