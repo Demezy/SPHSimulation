@@ -3,7 +3,6 @@ module SimulationModule where
 import Objects
 import Graphics.Gloss
 
--- TODO Check value type
 type Ai = (Particle -> Point -> Float)
 
 vectorDifference :: Point -> Point -> Vector
@@ -35,27 +34,6 @@ kernelFunctionIncompressible  r h
   | 0 <= r && r <= h = (1 - r/h)**2
   | otherwise = 0
 
-densityOfParticle :: [Particle] -> Particle -> Float
-densityOfParticle pList p = overallSum neighParticles sumElemI
-    where
-        kernelFunc = densityKernel (config p)
-
-        pPos = position p
-        pSmoothingLength = smoothingLength (config p)
-        neighParticles = findNeighbours pList pPos pSmoothingLength
-
-        rDiff :: Particle -> Vector
-        rDiff pI = vectorDifference pPos (position pI)
-
-        sumElemI :: Particle -> Float
-        sumElemI pI = mass (config pI) * kernelFunc (vectorMagnitude (rDiff pI)) pSmoothingLength
-
-        overallSum :: [Particle] -> (Particle -> Float) -> Float
-        overallSum (p : ps) pFunc = pFunc p + overallSum ps pFunc
-
-        -- appliedList = map sumElemI neighParticles
-        -- overallSum = foldl (+) 0 appliedList
-
 
 findNeighbours :: [Particle] -> Point -> Float -> [Particle]
 findNeighbours pList point h = filter filterFunc pList
@@ -72,6 +50,42 @@ pressureOfParticle pList p env = pStiffness * (pDensity - envDensity)
         pDensity = densityOfParticle pList p
         pStiffness = stiffness (config p)
 
+
+-- Base function to calculate formula SumI(W(...)*m*(...))
+baseSumFormula :: [Particle] -- pList
+               -> Particle -- particle
+               -> ([Particle] -> Particle -> Float) -- pass densityOfParticle by default
+               -> KernelFunc
+               -> (Particle -> Float) -- Ai
+               -> Float
+baseSumFormula pList p densityF kernelFunc ai = result neighParticles resI
+    where
+        pPos = position p
+        pSmoothingLength = smoothingLength (config p)
+        neighParticles = findNeighbours pList pPos pSmoothingLength
+
+        rDiff :: Particle -> Vector
+        rDiff pI = vectorDifference pPos (position pI)
+
+        resI :: Particle -> Float
+        resI pI = (mass (config pI) * (ai pI) / (densityF pList pI))
+                        * kernelFunc (vectorMagnitude (rDiff pI)) pSmoothingLength
+
+        result :: [Particle] -> (Particle -> Float) -> Float
+        result (p : ps) pFunc = pFunc p + result ps pFunc
+
+densityOfParticle :: [Particle] -> Particle -> Float
+densityOfParticle pList p = baseSumFormula pList p densityF kernelFunc ai
+    where
+        kernelFunc = densityKernel (config p)
+        densityF = (\_ _ -> 1.0)
+        ai = (\_ -> 1.0)
+
+pressureAtPoint :: [Particle] -> Particle -> Environment -> Float
+pressureAtPoint pList p env = baseSumFormula pList p densityOfParticle kernelFunc ai
+    where
+        kernelFunc = pressureKernel (config p)
+        ai pI = pressureOfParticle pList pI env
 
 
 gravityForceOfParticle :: Particle -> Environment -> Force
