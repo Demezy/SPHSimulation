@@ -1,7 +1,7 @@
 module SimulationModule where
 
-import Objects
 import Graphics.Gloss
+import Objects
 
 type Ai = (Particle -> Point -> Float)
 

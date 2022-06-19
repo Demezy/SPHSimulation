@@ -1,7 +1,5 @@
 module UsefulFunctions where
 
-import Graphics.Gloss 
-
 -- | First element in four elements tuple. 
 firstOfTuple :: (a,b,c,d) -> a
 firstOfTuple (x, _, _, _) = x
