@@ -53,7 +53,7 @@ renderSolids solids = pictures (map renderSolid solids)
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles
+renderUniverse universe = renderParticles particles <> renderSolids solids
   where
     particles = fluid universe
     solids    = walls universe
