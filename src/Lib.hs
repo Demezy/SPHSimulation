@@ -5,6 +5,7 @@ module Lib
 import Graphics.Gloss
 import Objects
 import RenderingOfUniverse
+import Graphics.Gloss.Interface.Pure.Game
 
 window :: Display
 window = InWindow "Nice Window" (1700, 1900) (10, 10)
@@ -15,8 +16,8 @@ background = blue
 drawing :: Picture
 drawing = circle 80
 
-universe :: Universe
-universe = Universe
+uni :: Universe
+uni = Universe
   { simulationScale = (1,1)
   , environment      = env
   , fluid           = [sampleParticle, sampleParticle2]
@@ -84,4 +85,21 @@ conf2 = FluidConfig
   }
 
 glossExample :: IO ()
-glossExample = display window background (renderUniverse universe) 
+glossExample = play window background fps initialWorld renderWorld handleWorld updateWorld
+ where
+        window          = FullScreen
+        background      = blue
+        fps             = 60
+        initialWorld = uni
+        renderWorld world       = renderUniverse world
+        handleWorld event world = handleEvent event world
+        updateWorld dt world    = simulation dt world
+
+simulation :: Float -> Universe -> Universe
+simulation dt universe = universe
+
+-- Events ---------------------------------------------------------------------
+handleEvent :: Event -> Universe -> Universe
+handleEvent event universe = universe
+
+--display window background (renderUniverse universe) 
