@@ -49,6 +49,6 @@ data FluidConfig = FluidConfig
   , tensionKernel   :: KernelFunc
   }
 
-type KernelFunc = Vector -> Float -> Float
+type KernelFunc = Float -> Float -> Float
 
 type Force = Vector

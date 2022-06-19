@@ -15,13 +15,31 @@ vectorMagnitude (x, y) = sqrt (x**2 + y**2)
 distance :: Point -> Point -> Float
 distance points = vectorMagnitude.vectorDifference points
 
--- TODO Implement
-kernelFunction :: KernelFunc
-kernelFunction = undefined
+kernelFunction0 :: KernelFunc
+kernelFunction0 r h
+  | 0 <= r && r <= h = (315 / (64 * pi * h**9)) * (h**2 - r**2)**3
+  | otherwise = 0
+
+kernelFunction1 :: KernelFunc
+kernelFunction1 r h
+  | 0 <= r && r <= h = (-(315 / (64 * pi * h**9))) * (6 * r) * (h**2 - r**2)**2
+  | otherwise = 0
+
+kernelFunction2 :: KernelFunc
+kernelFunction2 r h
+  | 0 <= r && r <= h = (315 / (64 * pi * h**9)) * 6 * (h**2 - r**2) * (4 * r**2 - (h**2 - r**2))
+  | otherwise = 0
+
+kernelFunctionIncompressible  :: KernelFunc
+kernelFunctionIncompressible  r h
+  | 0 <= r && r <= h = (1 - r/h)**2
+  | otherwise = 0
 
 densityOfParticle :: [Particle] -> Particle -> Float
 densityOfParticle pList p = overallSum neighParticles sumElemI
     where
+        kernelFunc = densityKernel (config p)
+
         pPos = position p
         pSmoothingLength = smoothingLength (config p)
         neighParticles = findNeighbours pList pPos pSmoothingLength
@@ -30,7 +48,7 @@ densityOfParticle pList p = overallSum neighParticles sumElemI
         rDiff pI = vectorDifference pPos (position pI)
 
         sumElemI :: Particle -> Float
-        sumElemI pI = mass (config pI) * kernelFunction (rDiff pI) pSmoothingLength
+        sumElemI pI = mass (config pI) * kernelFunc (vectorMagnitude (rDiff pI)) pSmoothingLength
 
         overallSum :: [Particle] -> (Particle -> Float) -> Float
         overallSum (p : ps) pFunc = pFunc p + overallSum ps pFunc
