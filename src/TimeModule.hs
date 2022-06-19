@@ -13,3 +13,17 @@ applyVelocity particle time =
     newY = speedY * time + oldY
     (speedX, speedY) = velocity particle
     (oldX, oldY) = position particle
+
+applyForce :: Particle -> Force -> Float -> Particle
+applyForce particle force time =
+  particle
+    { velocity = (newVX, newVY)
+    }
+  where
+    newVX = deltaVX + oldVX
+    newVY = deltaVY + oldVY
+    deltaVX = time * (forceX / massParticle)
+    deltaVY = time * (forceY / massParticle)
+    (forceX, forceY) = force
+    (oldVX, oldVY) = velocity particle
+    massParticle = (mass . config) particle
