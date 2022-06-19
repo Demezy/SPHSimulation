@@ -34,13 +34,18 @@ kernelFunctionIncompressible  r h
   | 0 <= r && r <= h = (1 - r/h)**2
   | otherwise = 0
 
+-- | Adjust vector to some length
+normalizeVector :: Vector -> Float -> Vector
+normalizeVector (x, y) l = (x * k, y * k)
+  where
+    k = l / vectorMagnitude (x, y)
 
 findNeighbours :: [Particle] -> Point -> Float -> [Particle]
 findNeighbours pList point h = filter filterFunc pList
   where
     filterFunc particle = (position particle /= point) && (distance point (position particle) <= h)
 
-valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
+valueAtPoint :: Point -> Float -> KernelFunc -> Ai -> value
 valueAtPoint = undefined
 
 pressureOfParticle :: [Particle] -> Particle -> Environment -> Float
