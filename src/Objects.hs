@@ -25,7 +25,7 @@ data Particle = Particle
 
 data Solid = Solid
   { isMovable      :: Bool
-  , shape          :: Bool -- | placeholder 
+  , shape          :: Path -- | placeholder 
   , renderFunction :: Solid -> Picture
   }
 
