@@ -42,7 +42,7 @@ densityOfParticle pList p = overallSum neighParticles sumElemI
 findNeighbours :: [Particle] -> Point -> Float -> [Particle]
 findNeighbours pList point h = filter filterFunc pList
   where
-    filterFunc particle = distance point (position particle) <= h
+    filterFunc particle = (position particle /= point) && (distance point (position particle) <= h)
 
 valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
 valueAtPoint = undefined
