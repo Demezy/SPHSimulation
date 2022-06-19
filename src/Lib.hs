@@ -18,17 +18,17 @@ drawing = circle 80
 universe :: Universe
 universe = Universe
   { simulationScale = (1,1)
-  , enviroment      = env
+  , environment      = env
   , fluid           = [sampleParticle, sampleParticle2]
   , walls           = undefined
   }
 
-env :: Enviroment
-env = Enviroment
+env :: Environment
+env = Environment
   { timeMultiplier      = 1
   , directionOfGravity  = (1, 1)
   , gravityAcceleration = 1
-  , densityOfEnviroment = 1
+  , densityOfEnvironment = 1
   }
 
 sampleParticle :: Particle

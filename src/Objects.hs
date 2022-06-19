@@ -1,19 +1,21 @@
 module Objects
-    ( Universe (Universe, simulationScale, enviroment, fluid, walls)
+    ( Universe (Universe, simulationScale, environment, fluid, walls)
     , Particle (Particle, position, velocity, config)
     , Solid (Solid, isMovable, shape, renderFunction)
-    , Enviroment (Enviroment, timeMultiplier, directionOfGravity,
-                   gravityAcceleration, densityOfEnviroment)
+    , Environment (Environment, timeMultiplier, directionOfGravity,
+                   gravityAcceleration, densityOfEnvironment)
     , FluidConfig (FluidConfig, coloring, stiffness, smoothingLength, mass,
                    viscosity, surfaceTension, densityKernel, pressureKernel,
                    viscosityKernel, tensionKernel)
+    , Force
+    , KernelFunc
     ) where
 
 import Graphics.Gloss
 
 data Universe = Universe
   { simulationScale :: (Float, Float)
-  , enviroment      :: Enviroment
+  , environment      :: Environment
   , fluid           :: [Particle]
   , walls           :: [Solid]
   }
@@ -30,11 +32,11 @@ data Solid = Solid
   , renderFunction :: Solid -> Picture
   }
 
-data Enviroment = Enviroment
+data Environment = Environment
   { timeMultiplier      :: Float
   , directionOfGravity  :: Vector 
   , gravityAcceleration :: Float 
-  , densityOfEnviroment :: Float
+  , densityOfEnvironment :: Float
   }
 
 data FluidConfig = FluidConfig

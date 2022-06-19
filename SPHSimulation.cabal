@@ -28,6 +28,7 @@ library
       Lib
       Objects
       RenderingOfUniverse
+      SimulationModule
   other-modules:
       Paths_SPHSimulation
   hs-source-dirs:

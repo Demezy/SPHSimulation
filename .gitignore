@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+dist-newstyle/*
+.obsidian/
 .stack-work/
 *~
-=======
 dist
 dist-*
 cabal-dev
@@ -24,7 +24,6 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
->>>>>>> 9f2654fe6a39e674cd056772b98cac8033cb8478
 
 # Obsidian
 Knowledge\ Base/.obsidian
