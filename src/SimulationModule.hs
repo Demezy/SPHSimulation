@@ -42,8 +42,13 @@ findNeighbours = undefined
 valueAtPoint :: position -> smoothingLength -> KernelFunc -> Ai -> value
 valueAtPoint = undefined
 
-pressureOfParticle :: Particle -> Environment -> value
-pressureOfParticle = undefined
+pressureOfParticle :: Particle -> Environment -> Float
+pressureOfParticle p env = pStiffness * (pDensity - envDensity)
+    where
+        envDensity = densityOfEnvironment env
+        pDensity = densityOfParticle p
+        pStiffness = stiffness (config p)
+
 
 gravityForceOfParticle :: Particle -> Environment -> Force
 gravityForceOfParticle = undefined
