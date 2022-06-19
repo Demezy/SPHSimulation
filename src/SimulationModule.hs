@@ -60,7 +60,7 @@ baseSumFormula :: [Particle]
                -> Float
 baseSumFormula pList pos densityF kernelType ai = result neighParticles resI
     where
-        pSmoothingLength = smoothingLength (config (pList !! 0))
+        pSmoothingLength = smoothingLength (config (pList !! 0)) -- TODO Обсудить нужен ли в findNeighbours
         neighParticles = findNeighbours pList pos pSmoothingLength
 
         rDiff :: Particle -> Vector
