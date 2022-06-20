@@ -30,22 +30,22 @@ rf = color green . polygon . shape
 env :: Environment
 env = Environment
   { timeMultiplier       = 1
-  , directionOfGravity   = (1, 1)
-  , gravityAcceleration  = 1
+  , directionOfGravity   = (0, -1)
+  , gravityAcceleration  = 1000
   , densityOfEnvironment = 1
   }
 
 sampleParticle :: Particle
 sampleParticle = Particle
   { position   = (0, 0)
-  , velocity   = (100, 1)
+  , velocity   = (100, 300)
   , config     = conf1
   }
 
 sampleParticle2 :: Particle
 sampleParticle2 = Particle
   { position    = (90, 0)
-  , velocity    = (1, 100)
+  , velocity    = (1, 500)
   , config      = conf2
   }
 
@@ -54,7 +54,7 @@ conf1 = FluidConfig
   { coloring        = black
   , stiffness       = undefined
   , smoothingLength = undefined
-  , mass            = undefined
+  , mass            = 10
   , viscosity       = undefined
   , surfaceTension  = undefined
   , densityKernel   = undefined
@@ -68,7 +68,7 @@ conf2 = FluidConfig
   { coloring        = red
   , stiffness       = undefined
   , smoothingLength = undefined
-  , mass            = undefined
+  , mass            = 50 
   , viscosity       = undefined
   , surfaceTension  = undefined
   , densityKernel   = undefined
@@ -97,7 +97,7 @@ simulation dt universe = universe{fluid = particlesNew}
     particlesNew = map (applyVelocity' . applyForces') particlesOld
     applyVelocity' p = applyVelocity p dt
     -- applyForces' p = applyForce p (_totalForces p) dt
-    applyForces' p = p
+    applyForces' p = applyForce p (gravityForceOfParticle p  env) dt
 
 
 -- Events ---------------------------------------------------------------------
