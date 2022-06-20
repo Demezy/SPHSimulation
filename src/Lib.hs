@@ -38,14 +38,14 @@ env = Environment
 sampleParticle :: Particle
 sampleParticle = Particle
   { position   = (0, 0)
-  , velocity   = (1, 1)
+  , velocity   = (100, 1)
   , config     = conf1
   }
 
 sampleParticle2 :: Particle
 sampleParticle2 = Particle
   { position    = (90, 0)
-  , velocity    = (1, 1)
+  , velocity    = (1, 100)
   , config      = conf2
   }
 
