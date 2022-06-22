@@ -77,8 +77,15 @@ pressureForceFunc particles envDensity particleI particleJ = forceVector
 viscosityForceFunc :: [Particle] -> Ai
 viscosityForceFunc particles particleI particleJ = forceVector
   where
-    -- TODO: implement viscosity function
-    forceVector = (0, 0)
+    densityJ = particleDensity particles particleJ
+    velocityI = vectorMagnitude (velocity particleI)
+    velocityJ = vectorMagnitude (velocity particleJ)
+    
+    absForce = (velocityI - velocityJ) / densityJ
+    -- TODO: implement viscosity dir
+    dir = (0, 0)
+    
+    forceVector = normalizeVector dir absForce
 
 tensionForceFunc :: [Particle] -> Ai
 tensionForceFunc particles particleI particleJ = forceVector
