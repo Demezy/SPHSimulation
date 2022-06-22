@@ -20,8 +20,8 @@ fourthOfTuple :: (a,b,c,d) -> d
 fourthOfTuple (_, _, _, x) = x
 
 -- | Vector by 2 points (p1 to p2)
-vectorDifference :: Point -> Point -> Vector
-vectorDifference (x1, y1) (x2, y2) = (x2 - x1, y2 - y1)
+vectorDiff :: Point -> Point -> Vector
+vectorDiff (x1, y1) (x2, y2) = (x2 - x1, y2 - y1)
 
 -- | Vector length
 vectorMagnitude :: Vector -> Float
@@ -29,7 +29,7 @@ vectorMagnitude (x, y) = sqrt (x**2 + y**2)
 
 -- | Distance between 2 points
 distance :: Point -> Point -> Float
-distance points = vectorMagnitude.vectorDifference points
+distance points = vectorMagnitude.vectorDiff points
 
 -- | Multiply vector by scalar
 vectorMul :: Vector -> Float -> Vector

@@ -70,7 +70,7 @@ pressureForceFunc particles envDensity particleI particleJ = forceVector
     pressureJ = particlePressure particleJ envDensity densityJ
     
     absForce = (pressureI + pressureJ) / (2 * densityJ)
-    dir = vectorDifference (position particleJ) (position particleI)
+    dir = vectorDiff (position particleJ) (position particleI)
     
     forceVector = normalizeVector dir absForce
 
@@ -78,14 +78,11 @@ viscosityForceFunc :: [Particle] -> Ai
 viscosityForceFunc particles particleI particleJ = forceVector
   where
     densityJ = particleDensity particles particleJ
-    velocityI = vectorMagnitude (velocity particleI)
-    velocityJ = vectorMagnitude (velocity particleJ)
-    
-    absForce = (velocityI - velocityJ) / densityJ
-    -- TODO: implement viscosity dir
-    dir = (0, 0)
-    
-    forceVector = normalizeVector dir absForce
+
+    multiplier = 1 / densityJ
+    vector = vectorDiff (velocity particleI) (velocity particleJ)
+
+    forceVector = vectorMul vector multiplier
 
 tensionForceFunc :: [Particle] -> Ai
 tensionForceFunc particles particleI particleJ = forceVector
@@ -93,7 +90,7 @@ tensionForceFunc particles particleI particleJ = forceVector
     densityJ = particleDensity particles particleJ
     
     absForce = 1 / densityJ
-    dir = vectorDifference (position particleI) (position particleJ)
+    dir = vectorDiff (position particleI) (position particleJ)
     
     forceVector = normalizeVector dir absForce
 
