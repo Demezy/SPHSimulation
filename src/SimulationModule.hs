@@ -123,11 +123,15 @@ tensionForce particles particleI = vectorMul forceVector o
 
 totalForce :: [Particle]  -- Fluid
            -> Particle    -- Main particle
-           -> Float       -- environment density
+           -> Environment       -- environment density
            -> Vector      -- resulting force vector
-totalForce particles particleI envDensity = vectorSum [pressureForce particles particleI envDensity,
+totalForce particles particleI env = vectorSum [pressureForce particles particleI envDensity,
                                                        viscosityForce particles particleI,
-                                                       tensionForce particles particleI]
+                                                       tensionForce particles particleI,
+                                                       gravityForceOfParticle particleI env
+                                                      ]
+                                                        where
+                                                          envDensity =  densityOfEnvironment env
 
 
 {-
