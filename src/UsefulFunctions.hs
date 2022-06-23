@@ -43,4 +43,4 @@ normalizeVector (x, y) l = (x * k, y * k)
 
 -- | Sum of vectors
 vectorSum :: [Vector] -> Vector
-vectorSum = foldr1 (\(a, b) (c, d) -> (a + c, b + d))
+vectorSum = foldr (\(a, b) (c, d) -> (a + c, b + d)) (0,0)
