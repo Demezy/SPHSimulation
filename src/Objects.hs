@@ -22,6 +22,8 @@ data Particle = Particle
   , velocity :: Vector
   , config   :: FluidConfig
   }
+instance Show Particle where
+  show (Particle pos vel _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
 
 data Solid = Solid
   { isMovable      :: Bool
