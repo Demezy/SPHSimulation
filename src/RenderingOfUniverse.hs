@@ -1,9 +1,9 @@
 module RenderingOfUniverse where
 
-import UsefulFunctions
-import Graphics.Gloss
 import Data.Tuple
+import Graphics.Gloss
 import Objects
+import UsefulFunctions
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -38,10 +38,10 @@ interpolationList intFunction from to iterations = reverse (constuctList [])
 render :: Float -> Float -> Color -> [Picture]
 render from to oldColor = map renderCircle circleTuple
   where
-    iterations = 100
+    iterations = 10
     renderCircle (radius, alpha) = color (newColor alpha) (thickCircle ((radius + 1) / 2) (radius + 1))
     circleTuple = zip listOfRadiuses listOfAlphas
-    listOfRadiuses = [0 .. to]
+    listOfRadiuses = [10 .. 11]
     listOfAlphas = interpolationList (interpolation (\x -> x ^ 2 + 2 * x)) 0 1 iterations
     newColor a = makeColor r g b a
     rgba = rgbaOfColor oldColor
@@ -54,7 +54,7 @@ renderParticle :: Particle -> Picture
 renderParticle particle = pictures (render 0 radius oldColor)
   where
     oldColor = coloring (config particle)
-    radius = 100
+    radius = 10
 
 -- | Render Particle at given coordinates.
 renderParticleAt :: Particle -> Picture
@@ -78,9 +78,19 @@ renderSolid solid = rendering solid
 renderSolids :: [Solid] -> Picture
 renderSolids solids = pictures (map renderSolid solids)
 
+renderDebugInfo :: Universe -> Picture
+renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
+  where
+    margin = 20
+    scale = 0.1
+    renderValue (name, value) = Color white (Scale scale scale (Text (name ++ ": " ++ show value)))
+    moveToTopLeft = translate (-700) 400
+    moveDown = translate 0 (-margin)
+    renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
+
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderSolids solids
+renderUniverse universe = renderParticles particles <> renderSolids solids <> renderDebugInfo universe
   where
     particles = fluid universe
     solids = walls universe
