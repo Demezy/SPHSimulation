@@ -11,10 +11,10 @@ import SimulationModule
 
 uni :: Universe
 uni = Universe
-  { simulationScale = (1,1)
+  { simulationScale = (0.001,0.001)
   , environment     = env
-  , fluid           = [sampleParticle, sampleParticle2]
-  , walls           = [wall] 
+  , fluid           = sampleParticles
+  , walls           = [] 
   }
 
 wall :: Solid
@@ -29,52 +29,54 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 1
+  { timeMultiplier       = 1000
   , directionOfGravity   = (0, -1)
-  , gravityAcceleration  = 1000
+  , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
   }
+
+sampleParticles = map (\x -> sampleParticle {position = (2*x**2, x), velocity = (0, 0)}) [1.. 20]
 
 sampleParticle :: Particle
 sampleParticle = Particle
   { position   = (0, 0)
-  , velocity   = (100, 300)
+  , velocity   = (0, 0)
   , config     = conf1
   }
 
 sampleParticle2 :: Particle
 sampleParticle2 = Particle
-  { position    = (90, 0)
-  , velocity    = (1, 500)
+  { position    = (1, 0)
+  , velocity    = (0, 0)
   , config      = conf2
   }
 
 conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
-  , stiffness       = undefined
-  , smoothingLength = undefined
-  , mass            = 10
-  , viscosity       = undefined
-  , surfaceTension  = undefined
-  , densityKernel   = undefined
-  , pressureKernel  = undefined
-  , viscosityKernel = undefined
-  , tensionKernel   = undefined
+  , stiffness       = 1
+  , smoothingLength = 10000
+  , mass            = 1
+  , viscosity       = 0
+  , surfaceTension  = 0
+  , densityKernel   = kernelFunction0
+  , pressureKernel  = kernelFunction1
+  , viscosityKernel = kernelFunction2
+  , tensionKernel   = kernelFunction1
   }
 
 conf2 :: FluidConfig
 conf2 = FluidConfig
   { coloring        = red
-  , stiffness       = undefined
-  , smoothingLength = undefined
-  , mass            = 50 
-  , viscosity       = undefined
-  , surfaceTension  = undefined
-  , densityKernel   = undefined
-  , pressureKernel  = undefined
-  , viscosityKernel = undefined
-  , tensionKernel   = undefined
+  , stiffness       = 1
+  , smoothingLength = 10000
+  , mass            = 1
+  , viscosity       = 0
+  , surfaceTension  = 0
+  , densityKernel   = kernelFunction0
+  , pressureKernel  = kernelFunction1
+  , viscosityKernel = kernelFunction2
+  , tensionKernel   = kernelFunction0
   }
 
 glossExample :: IO ()
@@ -92,12 +94,15 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
 simulation :: Float -> Universe -> Universe
 simulation dt universe = universe{fluid = particlesNew}
   where
+    time = dt* (timeMultiplier (environment universe))
     particlesOld = fluid universe
     env = environment universe
+    density = densityOfEnvironment env
     particlesNew = map (applyVelocity' . applyForces') particlesOld
-    applyVelocity' p = applyVelocity p dt
-    -- applyForces' p = applyForce p (_totalForces p) dt
-    applyForces' p = applyForce p (gravityForceOfParticle p  env) dt
+    applyVelocity' p = applyVelocity p time
+    -- applyForces' p = applyForce p (_totalForces p) time
+    applyForces' p = applyForce p (totalForce particlesOld p env) time
+    -- applyForces' p = applyForce p (gravityForceOfParticle p env ) time
 
 
 -- Events ---------------------------------------------------------------------
