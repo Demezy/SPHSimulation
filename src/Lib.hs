@@ -13,8 +13,13 @@ uni :: Universe
 uni = Universe
   { simulationScale = (0.001,0.001)
   , environment     = env
+<<<<<<< HEAD
   , fluid           = sampleParticles
   , walls           = [] 
+=======
+  , fluid           = [sampleParticle, sampleParticle2]
+  , walls           = [wall]
+>>>>>>> 3e34dcd (refactor: change mass)
   }
 
 wall :: Solid
@@ -68,6 +73,7 @@ conf1 = FluidConfig
 conf2 :: FluidConfig
 conf2 = FluidConfig
   { coloring        = red
+<<<<<<< HEAD
   , stiffness       = 1
   , smoothingLength = 10000
   , mass            = 1
@@ -77,6 +83,17 @@ conf2 = FluidConfig
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
   , tensionKernel   = kernelFunction0
+=======
+  , stiffness       = undefined
+  , smoothingLength = undefined
+  , mass            = 50
+  , viscosity       = undefined
+  , surfaceTension  = undefined
+  , densityKernel   = undefined
+  , pressureKernel  = undefined
+  , viscosityKernel = undefined
+  , tensionKernel   = undefined
+>>>>>>> 3e34dcd (refactor: change mass)
   }
 
 glossExample :: IO ()
