@@ -90,7 +90,7 @@ tensionForceFunc particles particleI particleJ = forceVector
     densityJ = particleDensity particles particleJ
     
     absForce = 1 / densityJ
-    dir = vectorDiff (position particleI) (position particleJ)
+    dir = vectorDiff (position particleJ) (position particleI)
     
     forceVector = normalizeVector dir absForce
 
@@ -126,9 +126,9 @@ totalForce :: [Particle]  -- Fluid
            -> Environment       -- environment density
            -> Vector      -- resulting force vector
 totalForce particles particleI env = vectorSum [pressureForce particles particleI envDensity,
-                                                       viscosityForce particles particleI,
-                                                       tensionForce particles particleI,
-                                                       gravityForceOfParticle particleI env
+                                                       --viscosityForce particles particleI,
+                                                       tensionForce particles particleI
+                                                       --gravityForceOfParticle particleI env
                                                       ]
                                                         where
                                                           envDensity =  densityOfEnvironment env

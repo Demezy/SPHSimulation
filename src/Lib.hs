@@ -29,7 +29,7 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 1000
+  { timeMultiplier       = 10000
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
@@ -57,12 +57,12 @@ conf1 = FluidConfig
   , stiffness       = 1
   , smoothingLength = 10000
   , mass            = 1
-  , viscosity       = 0
-  , surfaceTension  = 0
-  , densityKernel   = kernelFunction0
+  , viscosity       = 1
+  , surfaceTension  = 1
+  , densityKernel   = kernelFunctionIncompressible
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
-  , tensionKernel   = kernelFunction1
+  , tensionKernel   = kernelFunction2
   }
 
 conf2 :: FluidConfig
