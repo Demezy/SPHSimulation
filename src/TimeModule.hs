@@ -1,7 +1,8 @@
 module TimeModule where
 
-import Graphics.Gloss
 import Objects
+import UsefulFunctions
+
 
 applyVelocity :: Particle -> Float -> Particle
 applyVelocity particle time =
@@ -9,10 +10,15 @@ applyVelocity particle time =
     { position = (newX, newY)
     }
   where
+    min_speed = minSpeed (config particle)
+    (oldX, oldY) = position particle
+    speed = vectorMagnitude (velocity particle)
+    (speedX, speedY) = case speed >= min_speed of
+      True -> velocity particle
+      False -> (0, 0)
+    
     newX = speedX * time + oldX
     newY = speedY * time + oldY
-    (speedX, speedY) = velocity particle
-    (oldX, oldY) = position particle
 
 applyForce :: Particle -> Force -> Float -> Particle
 applyForce particle force time =

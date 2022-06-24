@@ -48,6 +48,7 @@ data FluidConfig = FluidConfig
   , viscosity       :: Float
   , surfaceTension  :: Float
   , friction        :: Float
+  , minSpeed        :: Float
   , densityKernel   :: KernelFunc
   , pressureKernel  :: KernelFunc
   , viscosityKernel :: KernelFunc

@@ -29,13 +29,13 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 8000
+  { timeMultiplier       = 10000
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
   }
 
-sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * r),
+sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
                                              velocity = (0, 0)}) [1.. n]
   where
     n = 60
@@ -59,12 +59,13 @@ sampleParticle2 = Particle
 conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
-  , stiffness       = 0.23
+  , stiffness       = 0.15
   , smoothingLength = 10000
   , mass            = 1e-1
-  , viscosity       = 1
-  , surfaceTension  = 1e2
+  , viscosity       = 1e-2
+  , surfaceTension  = 85
   , friction        = 1e-6
+  , minSpeed        = 1e-2
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
@@ -80,6 +81,7 @@ conf2 = FluidConfig
   , viscosity       = 0
   , surfaceTension  = 0
   , friction        = 1
+  , minSpeed        = 1e-2
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
