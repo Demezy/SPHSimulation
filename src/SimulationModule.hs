@@ -76,7 +76,7 @@ viscosityForceFunc densityMap particleI particleJ = forceVector
     densityJ = densityMap particleJ
 
     multiplier = 1 / densityJ
-    vector = vectorDiff (velocity particleJ) (velocity particleJ)
+    vector = vectorDiff (velocity particleI) (velocity particleJ)
 
     forceVector = vectorMul vector multiplier
 
