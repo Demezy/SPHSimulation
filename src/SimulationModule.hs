@@ -1,10 +1,12 @@
 module SimulationModule where
 
 import Graphics.Gloss
+import Data.Maybe
 import Objects
 import UsefulFunctions
 
 type Ai = (Particle -> Particle -> Vector)
+type DensityMap = (Particle -> Float)
 
 kernelFunction0 :: KernelFunc
 kernelFunction0 r h
@@ -61,11 +63,11 @@ particlePressure particleI envDensity densityI = k * (densityI - envDensity)
   where
     k = stiffness (config particleI)
 
-pressureForceFunc :: [Particle] -> Float -> Ai
-pressureForceFunc particles envDensity particleI particleJ = forceVector
+pressureForceFunc :: DensityMap -> Float -> Ai
+pressureForceFunc densityMap envDensity particleI particleJ = forceVector
   where
-    densityI = particleDensity particles particleI
-    densityJ = particleDensity particles particleJ
+    densityI = densityMap particleI
+    densityJ = densityMap particleJ
     pressureI = particlePressure particleI envDensity densityI
     pressureJ = particlePressure particleJ envDensity densityJ
     
@@ -74,20 +76,20 @@ pressureForceFunc particles envDensity particleI particleJ = forceVector
     
     forceVector = normalizeVector dir absForce
 
-viscosityForceFunc :: [Particle] -> Ai
-viscosityForceFunc particles particleI particleJ = forceVector
+viscosityForceFunc :: DensityMap -> Ai
+viscosityForceFunc densityMap particleI particleJ = forceVector
   where
-    densityJ = particleDensity particles particleJ
+    densityJ = densityMap particleJ
 
     multiplier = 1 / densityJ
     vector = vectorDiff (velocity particleI) (velocity particleJ)
 
     forceVector = vectorMul vector multiplier
 
-tensionForceFunc :: [Particle] -> Ai
-tensionForceFunc particles particleI particleJ = forceVector
+tensionForceFunc :: DensityMap -> Ai
+tensionForceFunc densityMap particleI particleJ = forceVector
   where
-    densityJ = particleDensity particles particleJ
+    densityJ = densityMap particleJ
     
     absForce = 1 / densityJ
     dir = vectorDiff (position particleJ) (position particleI)
@@ -95,99 +97,58 @@ tensionForceFunc particles particleI particleJ = forceVector
     forceVector = normalizeVector dir absForce
 
 pressureForce :: [Particle]  -- Fluid
+              -> DensityMap  -- Density for each particle
               -> Particle    -- Main particle
               -> Float       -- environment density
               -> Vector      -- resulting force vector
-pressureForce particles particleI envDensity = forceVector
+pressureForce particles densityMap particleI envDensity = forceVector
   where
     kernelFunc = pressureKernel (config particleI)
-    forceVector = particleValue particles particleI kernelFunc (pressureForceFunc particles envDensity)
+    forceVector = particleValue particles particleI kernelFunc (pressureForceFunc densityMap envDensity)
 
 viscosityForce :: [Particle]  -- Fluid
+               -> DensityMap  -- Density for each particle
                -> Particle    -- Main particle
                -> Vector      -- resulting force vector
-viscosityForce particles particleI = vectorMul forceVector u
+viscosityForce particles densityMap particleI = vectorMul forceVector u
   where
     kernelFunc = viscosityKernel (config particleI)
-    forceVector = particleValue particles particleI kernelFunc (viscosityForceFunc particles)
+    forceVector = particleValue particles particleI kernelFunc (viscosityForceFunc densityMap)
     u = viscosity (config particleI)
 
 tensionForce :: [Particle]  -- Fluid
+             -> DensityMap  -- Density for each particle
              -> Particle    -- Main particle
              -> Vector      -- resulting force vector
-tensionForce particles particleI = vectorMul forceVector o
+tensionForce particles densityMap particleI = vectorMul forceVector o
   where
     kernelFunc = tensionKernel (config particleI)
-    forceVector = particleValue particles particleI kernelFunc (tensionForceFunc particles)
+    forceVector = particleValue particles particleI kernelFunc (tensionForceFunc densityMap)
     o = surfaceTension (config particleI)
+    
+-- | Particles -> envDensity -> [(particle, particleDensity)]
+getDensityDict :: [Particle] -> [(Particle, Float)]
+getDensityDict particles = map (\p -> (p, particleDensity particles p)) particles
+
+-- | densityDict -> envDensity -> DensityMap
+getDensityMap :: [(Particle, Float)] -> Float -> DensityMap
+getDensityMap densityDict envDensity particle = density
+  where
+    foundDensity = lookup particle densityDict
+    density = Data.Maybe.fromMaybe envDensity foundDensity
 
 totalForce :: [Particle]  -- Fluid
            -> Particle    -- Main particle
-           -> Environment       -- environment density
+           -> Environment -- environment density
            -> Vector      -- resulting force vector
-totalForce particles particleI env = vectorSum [pressureForce particles particleI envDensity,
-                                                       --viscosityForce particles particleI,
-                                                       tensionForce particles particleI
-                                                       --gravityForceOfParticle particleI env
-                                                      ]
-                                                        where
-                                                          envDensity =  densityOfEnvironment env
-
-
-{-
-pressureOfParticle :: [Particle] -> Particle -> Environment -> Float
-pressureOfParticle pList p env = pStiffness * (pDensity - envDensity)
-    where
-        envDensity = densityOfEnvironment env
-        pDensity = densityOfParticle pList p
-        pStiffness = stiffness (config p)
-
--- Base function to calculate formula SumI(W(...)*m*(...))
-baseSumFormula :: [Particle]
-               -> Point
-               -> ([Particle] -> Point -> Float) -- pass densityOfParticle by default
-               -> (FluidConfig -> KernelFunc)
-               -> (Particle -> Float) -- Ai
-               -> Float
-baseSumFormula pList pos densityF kernelType ai = result neighParticles resI
-    where
-        pSmoothingLength = smoothingLength (config (pList !! 0)) -- TODO Обсудить нужен ли в findNeighbours
-        neighParticles = findNeighbours pList pos pSmoothingLength
-
-        rDiff :: Particle -> Vector
-        rDiff pI = vectorDifference pos (position pI)
-
-        resI :: Particle -> (FluidConfig -> KernelFunc) -> Float
-        resI pI kernelType = (mass (config pI) * (ai pI) / (densityF pList pos))
-                        * kernelFunc (vectorMagnitude (rDiff pI)) pSmoothingLength
-            where
-                kernelFunc = kernelType (config pI)
-
-        result :: [Particle] -> (Particle -> (FluidConfig -> KernelFunc) -> Float) -> Float
-        result (p : ps) pFunc = pFunc p kernelType + result ps pFunc
-            where
-
-
-densityAtPoint :: [Particle] -> Point -> Float
-densityAtPoint pList pos = baseSumFormula pList pos densityF densityKernel ai
-    where
-        densityF = (\_ _ -> 1.0)
-        ai = (\_ -> 1.0)
-
-densityOfParticle :: [Particle] -> Particle -> Float
-densityOfParticle pList p = densityAtPoint pList (position p)
-
-pressureAtPoint :: [Particle] -> Point -> Environment -> Float
-pressureAtPoint pList pos env = baseSumFormula pList pos densityAtPoint pressureKernel ai
-    where
-        ai pI = pressureOfParticle pList pI env
-
-pressureForceAtPoint :: [Particle] -> Point -> Environment -> Float
-pressureForceAtPoint pList pos env = baseSumFormula pList pos densityAtPoint pressureKernel ai
-    where
-        ai pI = (pressureAtPoint pList pos env + pressureOfParticle pList pI env) / 2
--}
-
+totalForce particles particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
+                                                --viscosityForce particles densityMap particleI,
+                                                --tensionForce particles densityMap particleI,
+                                                gravityForceOfParticle particleI env
+                                                ]
+  where
+    envDensity =  densityOfEnvironment env
+    densityMap = getDensityMap (getDensityDict particles) envDensity
 
 gravityForceOfParticle :: Particle -> Environment -> Force
 gravityForceOfParticle particle env = (scalar * x, scalar * y)

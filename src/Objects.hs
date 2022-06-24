@@ -24,6 +24,8 @@ data Particle = Particle
   }
 instance Show Particle where
   show (Particle pos vel _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
+instance Eq Particle where
+  (==) p1 p2 = position p1 == position p2
 
 data Solid = Solid
   { isMovable      :: Bool

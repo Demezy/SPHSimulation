@@ -90,7 +90,7 @@ renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) 
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderSolids solids <> renderDebugInfo universe
+renderUniverse universe = renderParticles particles <> renderSolids solids
   where
     particles = fluid universe
     solids = walls universe

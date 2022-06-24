@@ -29,13 +29,13 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 10000
+  { timeMultiplier       = 1000
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
   }
 
-sampleParticles = map (\x -> sampleParticle {position = (2*x**2, x), velocity = (0, 0)}) [1.. 20]
+sampleParticles = map (\x -> sampleParticle {position = (2*x**2, x), velocity = (0, 0)}) [1.. 100]
 
 sampleParticle :: Particle
 sampleParticle = Particle
@@ -55,11 +55,11 @@ conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
   , stiffness       = 1
-  , smoothingLength = 10000
+  , smoothingLength = 1000
   , mass            = 1
   , viscosity       = 1
   , surfaceTension  = 1
-  , densityKernel   = kernelFunctionIncompressible
+  , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
   , tensionKernel   = kernelFunction2
@@ -94,7 +94,7 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
 simulation :: Float -> Universe -> Universe
 simulation dt universe = universe{fluid = particlesNew}
   where
-    time = dt* (timeMultiplier (environment universe))
+    time = dt* timeMultiplier (environment universe)
     particlesOld = fluid universe
     env = environment universe
     density = densityOfEnvironment env
