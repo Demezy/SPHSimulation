@@ -42,11 +42,12 @@ data Environment = Environment
 
 data FluidConfig = FluidConfig
   { coloring        :: Color
-  , stiffness       :: Float
   , smoothingLength :: Float
+  , stiffness       :: Float
   , mass            :: Float
   , viscosity       :: Float
   , surfaceTension  :: Float
+  , friction        :: Float
   , densityKernel   :: KernelFunc
   , pressureKernel  :: KernelFunc
   , viscosityKernel :: KernelFunc

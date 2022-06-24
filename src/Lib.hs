@@ -29,7 +29,7 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 5000
+  { timeMultiplier       = 8000
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
@@ -38,7 +38,7 @@ env = Environment
 sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * r),
                                              velocity = (0, 0)}) [1.. n]
   where
-    n = 27
+    n = 60
     angle x = (2 * pi * x) / n
     r = 200
 
@@ -59,11 +59,12 @@ sampleParticle2 = Particle
 conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
-  , stiffness       = 0.1
+  , stiffness       = 0.23
   , smoothingLength = 10000
   , mass            = 1e-1
-  , viscosity       = 5
+  , viscosity       = 1
   , surfaceTension  = 1e2
+  , friction        = 1e-6
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
@@ -78,6 +79,7 @@ conf2 = FluidConfig
   , mass            = 1
   , viscosity       = 0
   , surfaceTension  = 0
+  , friction        = 1
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
@@ -106,7 +108,9 @@ simulation dt universe = universe{fluid = particlesNew}
     particlesNew = map (applyVelocity' . applyForces') particlesOld
     applyVelocity' p = applyVelocity p time
     -- applyForces' p = applyForce p (_totalForces p) time
-    applyForces' p = applyForce p (totalForce particlesOld p env) time
+    envDensity = densityOfEnvironment env
+    densityMap = getDensityMap (getDensityDict particlesOld) envDensity
+    applyForces' p = applyForce p (totalForce particlesOld densityMap  p env) time
     -- applyForces' p = applyForce p (gravityForceOfParticle p env ) time
 
 

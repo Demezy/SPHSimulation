@@ -120,6 +120,14 @@ tensionForce particles densityMap particleI = vectorMul forceVector o
     kernelFunc = tensionKernel (config particleI)
     forceVector = particleValue particles particleI kernelFunc (tensionForceFunc densityMap)
     o = surfaceTension (config particleI)
+
+frictionForce :: Particle -> Vector
+frictionForce particle = forceVector
+  where
+    v = velocity particle
+    m = mass (config particle)
+    k = friction (config particle)
+    forceVector = vectorMul v (m * (-k))
     
 -- | Particles -> envDensity -> [(particle, particleDensity)]
 getDensityDict :: [Particle] -> [(Particle, Float)]
@@ -133,18 +141,20 @@ getDensityMap densityDict envDensity particle = density
     density = Data.Maybe.fromMaybe envDensity foundDensity
 
 totalForce :: [Particle]  -- Fluid
+           -> DensityMap  -- Density map
            -> Particle    -- Main particle
            -> Environment -- environment density
            -> Vector      -- resulting force vector
-totalForce particles particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
+totalForce particles densityMap particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
                                                 viscosityForce particles densityMap particleI,
-                                                tensionForce particles densityMap particleI
+                                                tensionForce particles densityMap particleI,
+                                                frictionForce particleI
                                                 --gravityForceOfParticle particleI env
                                                 ]
   where
     envDensity =  densityOfEnvironment env
     -- O(n^2)
-    densityMap = getDensityMap (getDensityDict particles) envDensity
+    -- densityMap = getDensityMap (getDensityDict particles) envDensity
 
 gravityForceOfParticle :: Particle -> Environment -> Force
 gravityForceOfParticle particle env = (scalar * x, scalar * y)
