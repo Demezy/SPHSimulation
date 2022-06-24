@@ -29,13 +29,18 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 1000
+  { timeMultiplier       = 5000
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
   }
 
-sampleParticles = map (\x -> sampleParticle {position = (2*x**2, x), velocity = (0, 0)}) [1.. 100]
+sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * r),
+                                             velocity = (0, 0)}) [1.. n]
+  where
+    n = 27
+    angle x = (2 * pi * x) / n
+    r = 200
 
 sampleParticle :: Particle
 sampleParticle = Particle
@@ -54,11 +59,11 @@ sampleParticle2 = Particle
 conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
-  , stiffness       = 1
-  , smoothingLength = 1000
-  , mass            = 1
+  , stiffness       = 0.1
+  , smoothingLength = 10000
+  , mass            = 1e-1
   , viscosity       = 1
-  , surfaceTension  = 1
+  , surfaceTension  = 5e1
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
@@ -84,7 +89,7 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
  where
         window                  = FullScreen
         background              = blue
-        fps                     = 60
+        fps                     = 40
         initialWorld            = uni
         renderWorld       world = renderUniverse world
         handleWorld event world = handleEvent event world
