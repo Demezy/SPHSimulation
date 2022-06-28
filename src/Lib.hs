@@ -117,6 +117,14 @@ simulation dt universe = universe{fluid = particlesNew}
 
 
 -- Events ---------------------------------------------------------------------
+changeTimeMul :: Float -> Universe -> Universe
+changeTimeMul x (Universe s e f w) = Universe s (new_e e) f w
+  where
+    new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
+
+
 handleEvent :: Event -> Universe -> Universe
-handleEvent event universe = universe
+handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
+handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
+handleEvent _ universe = universe
 
