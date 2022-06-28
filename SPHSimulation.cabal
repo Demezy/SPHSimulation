@@ -46,7 +46,9 @@ executable SPHSimulation-exe
       Paths_SPHSimulation
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -O2
+  -- >>>>>>> Profiling enabled version
+  -- ghc-options: -threaded -rtsopts "-with-rtsopts=-N -p" -prof -O2
   build-depends:
       SPHSimulation
     , base >=4.7 && <5
