@@ -32,7 +32,7 @@ brew install freeglut
 
 Arch Linux:
 ```sh
-sudo pacman -Sy freeglut
+sudo pacman -Sy --noconfirm freeglut
 ```
 
 ## Development
@@ -55,7 +55,7 @@ sudo pacman -Sy freeglut
  import NewFileName
 ```
 
-4. Update `./SPHSimulation.cabal` correspondingly
+1. Update `./SPHSimulation.cabal` correspondingly
 ```cabal
  library
   exposed-modules:
@@ -63,3 +63,25 @@ sudo pacman -Sy freeglut
       Objects
       NewFileName
 ```
+
+## Profiling
+
+In some case you may want to profile program.
+
+You first need to reinstall packages with profiling capabilities
+```
+cabal install --reinstall --enable-profiling
+```
+
+Then edit cabal configuration (`SPHSimulation.cabal`) with such ghc options
+```
+ghc-options: -threaded -rtsopts "-with-rtsopts=-N -p" -prof -O2
+```
+
+And finally run with profiling enabled
+```
+cabal run SPHSimulation-exe --enable-profiling
+```
+
+You will find `*.prof` file at root dir of project
+
