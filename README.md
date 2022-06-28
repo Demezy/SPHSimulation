@@ -1,31 +1,61 @@
-# liquid-simulation
-Physical based liquid simulation tool written in haskell
-# Quick start
-For a quick start use:
+<h1>
+	<p align="center">
+	SPH Simulation
+	</p>
+</h1>
 
-`stack run`
+Smothered-particle hydrodynamics simulation of liquids written in
+Haskell.
 
-or
+## Quick start
 
-`cabal run SPHSimulation-exe`
+To build and run the project using Stack use:
 
-In case of problems try to install `freeglut` package
+```sh
+stack run
+```
+Or using Cabal:
 
-`sudo pacman -Sy freeglut`
+```sh
+cabal run SPHSimulation-exe
+```
 
-# Add new file
-1. Add \<NewFileName\>.hs to the directory - "~/SPHSimulation/src/" (Name the file with a capital first letter)
-2. Add to the head of new file:
+### Known issues
+
+In case of having problems with OpenGL install
+[freeglut](http://freeglut.sourceforge.net/)
+
+macOS:
+```sh
+brew install freeglut
+```
+
+Arch Linux:
+```sh
+sudo pacman -Sy freeglut
+```
+
+## Development
+
+### Adding new file
+
+1. Create `NewFileName.hs` in `./src` folder
+
+**Important**: Filename should start with capital letter
+
+2. Head of the file should contain module declaration
+
 ```hs
  module NewFileName where
 ```
 
-3. Import new file to the "~/SPHSimulation/app/Main.hs"
+3. Import this module to `./app/Main.hs`
+
 ```hs
  import NewFileName
 ```
 
-4. Add new file to the "~/SPHSimulation/SPHSimulation.cabal"
+4. Update `./SPHSimulation.cabal` correspondingly
 ```cabal
  library
   exposed-modules:
