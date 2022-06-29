@@ -8,6 +8,7 @@ import Graphics.Gloss
 import Objects
 import TimeModule
 import SimulationModule
+import UsefulFunctions
 
 uni :: Universe
 uni = Universe
@@ -38,7 +39,7 @@ env = Environment
 sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
                                              velocity = (0, 0)}) [1.. n]
   where
-    n = 60
+    n = 120
     angle x = (2 * pi * x) / n
     r = 200
 
@@ -92,8 +93,8 @@ glossExample :: IO ()
 glossExample = play window background fps initialWorld renderWorld handleWorld updateWorld
  where
         window                  = FullScreen
-        background              = blue
-        fps                     = 40
+        background              = white
+        fps                     = 10
         initialWorld            = uni
         renderWorld       world = renderUniverse world
         handleWorld event world = handleEvent event world
@@ -117,12 +118,6 @@ simulation dt universe = universe{fluid = particlesNew}
 
 
 -- Events ---------------------------------------------------------------------
-changeTimeMul :: Float -> Universe -> Universe
-changeTimeMul x (Universe s e f w) = Universe s (new_e e) f w
-  where
-    new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
-
-
 handleEvent :: Event -> Universe -> Universe
 handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
 handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
