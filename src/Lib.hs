@@ -39,7 +39,7 @@ env = Environment
 sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
                                              velocity = (0, 0)}) [1.. n]
   where
-    n = 120
+    n = 100
     angle x = (2 * pi * x) / n
     r = 200
 
