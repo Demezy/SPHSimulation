@@ -49,6 +49,27 @@ normalizeVector (x, y) l = (x * k, y * k)
 vectorSum :: [Vector] -> Vector
 vectorSum = foldr (\(a, b) (c, d) -> (a + c, b + d)) (0,0)
 
+-- | Closest point on the segment to a given point
+segmentNearestPoint :: Point -> (Point, Point) -> Point
+segmentNearestPoint (e0, e1) ((a0, a1), (b0, b1))
+  | ab_be > 0 = (b0, b1)
+  | ab_ae < 0 = (a0, a1)
+  | otherwise = (a0 + dir0 * dotP, a1 + dir1 * dotP)
+    where
+      (ab0, ab1) = vectorDiff (a0, a1) (b0, b1)
+      (be0, be1) = vectorDiff (b0, b1) (e0, e1)
+      (ae0, ae1) = vectorDiff (a0, a1) (e0, e1)
+      
+      ab_be = ab0 * be0 + ab1 * be1
+      ab_ae = ab0 * ae0 + ab1 * ae1
+      
+      (dir0, dir1) = normalizeVector (ab0, ab1) 1
+      dotP = dir0 * ae0 + dir1 * ae1
+
+-- | Distance between segment and point
+pointSegmentDistance :: Point -> (Point, Point) -> Float
+pointSegmentDistance p w = distance p (segmentNearestPoint p w)
+
 -- | Changing speed of time.
 changeTimeMul :: Float -> Universe -> Universe
 changeTimeMul x (Universe s e f w) = Universe s (new_e e) f w
