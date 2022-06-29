@@ -16,7 +16,7 @@ applyVelocity particle time =
     (speedX, speedY) = case speed >= min_speed of
       True -> velocity particle
       False -> (0, 0)
-    
+
     newX = speedX * time + oldX
     newY = speedY * time + oldY
 
