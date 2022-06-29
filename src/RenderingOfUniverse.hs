@@ -42,7 +42,7 @@ render from to oldColor = map renderCircle circleTuple
     renderCircle (radius, alpha) = color (newColor alpha) (thickCircle ((radius + 1) / 2) (radius + 1))
     circleTuple = zip listOfRadiuses listOfAlphas
     listOfRadiuses = [10 .. 11]
-    listOfAlphas = interpolationList (interpolation (\x -> (sqrt(cos x) * cos(300 * x)))) 0 1 iterations
+    listOfAlphas = interpolationList (interpolation (\x -> sqrt(cos x) * cos(300 * x))) 0 1 iterations
     newColor a = makeColor r g b a
     rgba = rgbaOfColor oldColor
     r = firstOfTuple rgba
@@ -69,14 +69,14 @@ renderParticles :: [Particle] -> Picture
 renderParticles particles = pictures (map renderParticleAt particles)
 
 -- | Render Solid by itself.
-renderSolid :: Solid -> Picture
-renderSolid solid = rendering solid
+renderWall :: Wall -> Picture
+renderWall wall = rendering wall
   where
-    rendering = renderFunction solid
+    rendering = renderFunc wall
 
 -- | Render all Solids into Universe.
-renderSolids :: [Solid] -> Picture
-renderSolids solids = pictures (map renderSolid solids)
+renderWalls :: [Wall] -> Picture
+renderWalls solids = pictures (map renderWall solids)
 
 renderDebugInfo :: Universe -> Picture
 renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
@@ -90,7 +90,7 @@ renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) 
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderSolids solids
+renderUniverse universe = renderParticles particles <> renderWalls solids
   where
     particles = fluid universe
     solids = walls universe

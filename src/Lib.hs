@@ -15,11 +15,19 @@ uni = Universe
   { simulationScale = (0.001,0.001)
   , environment     = env
   , fluid           = sampleParticles
-  , walls           = []
+  , walls           = [wall1 ((700, 400), (700, -400)),
+                       wall1 ((700, -400), (-700, -400)),
+                       wall1 ((-700, -400), (-700, 400)),
+                       wall1 ((-700, 400), (700, 400))]
   }
 
-wall :: Solid
-wall = Solid
+wall1 :: (Point, Point) -> Wall
+wall1 (p1, p2) = Wall (p1, p2) renderWallGreen
+  where
+    renderWallGreen _ = line [p1, p2]
+
+solid :: Solid
+solid = Solid
   { isMovable      = True
   , shape          = rectanglePath 10 10
   , renderFunction = rf
@@ -39,7 +47,7 @@ env = Environment
 sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
                                              velocity = (0, 0)}) [1.. n]
   where
-    n = 100
+    n = 70
     angle x = (2 * pi * x) / n
     r = 200
 
@@ -94,7 +102,7 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
  where
         window                  = FullScreen
         background              = white
-        fps                     = 10
+        fps                     = 30
         initialWorld            = uni
         renderWorld       world = renderUniverse world
         handleWorld event world = handleEvent event world

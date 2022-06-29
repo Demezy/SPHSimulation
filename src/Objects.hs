@@ -3,7 +3,8 @@ module Objects
     , FluidConfig (..)
     , Universe    (..)
     , Particle    (..)
-    , Solid       (..)
+    , Wall       (..)
+    , Solid (..)
     , KernelFunc
     , Force
     ) where
@@ -14,7 +15,7 @@ data Universe = Universe
   { simulationScale :: (Float, Float)
   , environment     :: Environment
   , fluid           :: [Particle]
-  , walls           :: [Solid]
+  , walls           :: [Wall]
   }
 
 data Particle = Particle
@@ -26,6 +27,8 @@ instance Show Particle where
   show (Particle pos vel _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
 instance Eq Particle where
   (==) p1 p2 = position p1 == position p2
+
+data Wall = Wall {pos :: (Point, Point), renderFunc :: Wall -> Picture}
 
 data Solid = Solid
   { isMovable      :: Bool
