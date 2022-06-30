@@ -1,6 +1,7 @@
 dist-newstyle/
 .obsidian/
 .stack-work/
+.DS_Store
 *~
 dist
 dist-*
