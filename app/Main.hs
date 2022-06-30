@@ -6,6 +6,7 @@ import Objects
 import RenderingOfUniverse
 import SimulationModule
 import UsefulFunctions
+import Test 
 
 main :: IO ()
-main = glossExample
+main = glossExample  
