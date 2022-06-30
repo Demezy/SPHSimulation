@@ -9,7 +9,7 @@ module Objects
     , Force
     ) where
 
-import Graphics.Gloss
+import Graphics.Gloss (Point, Vector, Path, Picture, Color)
 
 data Universe = Universe
   { simulationScale :: (Float, Float)

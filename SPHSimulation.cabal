@@ -28,6 +28,7 @@ library
       Lib
       Test
       Objects
+      QuadTree
       RenderingOfUniverse
       SimulationModule
       TimeModule
