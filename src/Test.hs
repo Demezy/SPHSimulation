@@ -26,8 +26,10 @@ type Min = Point
 type Max = Point
 
 hi :: [Particle] -> Shape
-hi = r 
+hi = r
 
+r :: [Particle] -> Shape
+r []       = circlee (0,0) 0
 r [x]      = circlee (dx, dy) 2
     where
         coordinate = position x
@@ -75,7 +77,7 @@ collapse shape leaf@(Leaf ((xmin, ymin), (xmax, ymax)))
       values = [shape (x, y) | x <- [xmin, xmax], y <- [ymin, ymax]]
 collapse shape (Root a b c d) =
     collapse' $ map (collapse shape) [a, b, c, d]
-    where 
+    where
         сollapse' [Empty, Empty, Empty, Empty] = Empty
         collapse' [Full, Full, Full, Full] = Full
         collapse' [q, r, s, t] = Root q r s t
@@ -87,10 +89,10 @@ instance Foldable Tree_ where
     foldMap f (Leaf a) = f a
     foldMap f (Root a b c d) = mconcat $ map (foldMap f) [a, b, c, d]
     foldMap _ _ = mempty
-    
+
 --------------------------------------------------------------------------------
 
-data Side = Upperr | Lowerr | Left | Right 
+data Side = Upperr | Lowerr | Left | Right
   deriving Show
 
 -- This lookup table takes a bitmask abcd and
@@ -116,11 +118,11 @@ lut = [[],                          -- 0000
 
 index :: Shape -> Cell -> Int
 index shape ((xmin, ymin), (xmax, ymax)) =
-    sum [if shape pt < 0 
-         then 2^(3 - i) 
-         else 0 
+    sum [if shape pt < 0
+         then 2^(3 - i)
+         else 0
          | (pt, i) <- zip pts [0..]]
-      where 
+      where
         pts = [(x,y) | y <- [ymin, ymax], x <- [xmin, xmax]]
 
 edges :: Shape -> Cell -> [(Side, Side)]
@@ -128,7 +130,7 @@ edges shape c = lut !! index shape c
 
 pt :: Shape -> Cell -> Side -> Point
 pt shape ((xmin, ymin), (xmax, ymax)) side =
-    case side of 
+    case side of
         Left  -> zero shape (xmin, ymin) (xmin, ymax)
         Right -> zero shape (xmax, ymin) (xmax, ymax)
         Lowerr -> zero shape (xmin, ymin) (xmax, ymin)
@@ -153,7 +155,7 @@ contours shape cell = [(pt' a, pt' b) |
 
 ----------------------------------------------------------------------------
 
-listOfVectors particles =  (foldMap (contours (hi particles)) $ collapse (hi particles)$ buildTree (-500,-500) (500, 500) 9 )
+listOfVectors particles =  foldMap (contours (hi particles)) $ collapse (hi particles)$ buildTree (-500,-500) (500, 500) 9
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
