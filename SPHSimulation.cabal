@@ -41,7 +41,6 @@ library
       base >=4.7 && <5
     , gloss >=1.13
     , bimap
-    , hmatrix
   default-language: Haskell2010
 
 executable SPHSimulation-exe
@@ -56,7 +55,6 @@ executable SPHSimulation-exe
     , base >=4.7 && <5
     , gloss >=1.13
     , bimap
-    , hmatrix
   default-language: Haskell2010
 
 test-suite SPHSimulation-test
@@ -72,5 +70,4 @@ test-suite SPHSimulation-test
     , base >=4.7 && <5
     , gloss >=1.13
     , bimap
-    , hmatrix
   default-language: Haskell2010
