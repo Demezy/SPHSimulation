@@ -72,7 +72,10 @@ pointSegmentDistance p w = distance p (segmentNearestPoint p w)
 
 -- | Changing speed of time.
 changeTimeMul :: Float -> Universe -> Universe
-changeTimeMul x (Universe s e f w) = Universe s (new_e e) f w
+changeTimeMul x universe = universe{environment = newEnv}
   where
-    new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
+    env = environment universe
+    prevTimeMultiplier = timeMultiplier env
+    newEnv = env{timeMultiplier = prevTimeMultiplier + x}
+    -- new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
 

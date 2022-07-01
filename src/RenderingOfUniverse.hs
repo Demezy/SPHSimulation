@@ -4,7 +4,7 @@ import Data.Tuple
 import Graphics.Gloss
 import Objects
 import UsefulFunctions
-import Test
+-- import Test
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -66,12 +66,12 @@ renderParticleAt particle = translate dx dy (renderParticle particle)
     dy = snd coordinate
 
 -- | Render all Particles into Universe.
---renderParticles :: [Particle] -> Picture
---renderParticles particles = pictures (map renderParticleAt particles)
+renderParticles :: [Particle] -> Picture
+renderParticles particles = pictures (map renderParticleAt particles)
 
 -- | Render all Particles into Universe.
-renderParticles :: [Particle] -> Picture
-renderParticles particles = scale 5.0 5.0 (pictures (vectorsToPicture particles))
+-- renderParticles :: [Particle] -> Picture
+-- renderParticles particles = scale 5.0 5.0 (pictures (vectorsToPicture particles))
 
 -- | Render Solid by itself.
 renderWall :: Wall -> Picture

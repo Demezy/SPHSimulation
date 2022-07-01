@@ -10,11 +10,13 @@ module Objects
     ) where
 
 import Graphics.Gloss (Point, Vector, Path, Picture, Color)
+import QuadTree (QuadTree)
 
 data Universe = Universe
   { simulationScale :: (Float, Float)
   , environment     :: Environment
   , fluid           :: [Particle]
+  , fluidAsTree     :: QuadTree Particle
   , walls           :: [Wall]
   }
 

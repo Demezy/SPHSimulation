@@ -4,6 +4,7 @@ import Graphics.Gloss
 import Data.Maybe
 import Objects
 import UsefulFunctions
+import QuadTree
 
 type Ai = (Particle -> Particle -> Vector)
 type DensityMap = (Particle -> Float)
@@ -22,20 +23,21 @@ kernelFunctionIncompressible  r h
   | 0 <= r && r <= h = (1 - r/h)**2
   | otherwise = 0
 
-findNeighbours :: [Particle] -> Point -> Float -> [Particle]
-findNeighbours pList point h = filter filterFunc pList
-  where
-    filterFunc particle = (position particle /= point) && (distance point (position particle) <= h)
+findNeighbours :: QuadTree Particle -> Point -> Float -> [Particle]
+findNeighbours tree = getObjectsInRadius tree position
+  -- filter filterFunc pList
+  -- where
+  --   filterFunc particle = (position particle /= point) && (distance point (position particle) <= h)
 
 particleValue :: [Particle]  -- Fluid
               -> Particle    -- Main particle
               -> KernelFunc  -- kernel function
               -> Ai          -- function to calculate force between 2 particles
               -> Vector      -- resulting force vector
-particleValue particles particleI kernelFunc func = vectorSum (map itemResult neighbours)
+particleValue neighbours particleI kernelFunc func = vectorSum (map itemResult neighbours)
   where
     h = smoothingLength (config particleI)
-    neighbours = findNeighbours particles (position particleI) h
+    -- neighbours = findNeighbours particles (position particleI) h
 
     itemResult particleJ = vectorMul itemForce (mass (config particleJ) * kernelFunc r h)
       where
@@ -64,10 +66,10 @@ pressureForceFunc densityMap envDensity particleI particleJ = forceVector
     densityJ = densityMap particleJ
     pressureI = particlePressure particleI envDensity densityI
     pressureJ = particlePressure particleJ envDensity densityJ
-    
+
     absForce = (pressureI + pressureJ) / (2 * densityJ)
     dir = vectorDiff (position particleJ) (position particleI)
-    
+
     forceVector = normalizeVector dir absForce
 
 viscosityForceFunc :: DensityMap -> Ai
@@ -84,10 +86,10 @@ tensionForceFunc :: DensityMap -> Ai
 tensionForceFunc densityMap particleI particleJ = forceVector
   where
     densityJ = densityMap particleJ
-    
+
     absForce = 1 / densityJ
     dir = vectorDiff (position particleJ) (position particleI)
-    
+
     forceVector = normalizeVector dir absForce
 
 -- O(n^2)???
@@ -128,7 +130,7 @@ frictionForce particle = forceVector
     m = mass (config particle)
     k = friction (config particle)
     forceVector = vectorMul v (m * (-k))
-    
+
 -- | Particles -> envDensity -> [(particle, particleDensity)]
 getDensityDict :: [Particle] -> [(Particle, Float)]
 getDensityDict particles = map (\p -> (p, particleDensity particles p)) particles
@@ -138,14 +140,14 @@ getDensityMap :: [(Particle, Float)] -> Float -> DensityMap
 getDensityMap densityDict envDensity particle = density
   where
     foundDensity = lookup particle densityDict
-    density = Data.Maybe.fromMaybe envDensity foundDensity
+    density = fromMaybe envDensity foundDensity
 
-totalForce :: [Particle]  -- Fluid
+totalForce :: QuadTree Particle  -- Fluid
            -> DensityMap  -- Density map
            -> Particle    -- Main particle
            -> Environment -- environment density
            -> Vector      -- resulting force vector
-totalForce particles densityMap particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
+totalForce tree densityMap particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
                                                 viscosityForce particles densityMap particleI,
                                                 tensionForce particles densityMap particleI,
                                                 frictionForce particleI
@@ -153,16 +155,18 @@ totalForce particles densityMap particleI env = vectorSum [pressureForce particl
                                                 ]
   where
     envDensity =  densityOfEnvironment env
+    particles = findNeighbours tree (position particleI) h
+    h = smoothingLength (config particleI)
     -- O(n^2)
     -- densityMap = getDensityMap (getDensityDict particles) envDensity
 
 gravityForceOfParticle :: Particle -> Environment -> Force
 gravityForceOfParticle particle env = (scalar * x, scalar * y)
  where
-  g = gravityAcceleration env 
+  g = gravityAcceleration env
   massParticle = (mass . config) particle
   scalar = g * massParticle
-  directionGravity = directionOfGravity env 
+  directionGravity = directionOfGravity env
   x = fst directionGravity
   y = snd directionGravity
 
