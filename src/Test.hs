@@ -6,7 +6,6 @@ import Data.Foldable
 import Data.Maybe
 
 import Prelude hiding (Left, Right)
-import Numeric.LinearAlgebra.HMatrix hiding (inv)
 import Graphics.Gloss
 import Data.Bifunctor
 
@@ -92,7 +91,7 @@ instance Foldable Tree_ where
 
 --------------------------------------------------------------------------------
 
-data Side = Upperr | Lowerr | Left | Right
+data Side = Upper | Lower | Left | Right
   deriving Show
 
 -- This lookup table takes a bitmask abcd and
@@ -100,20 +99,20 @@ data Side = Upperr | Lowerr | Left | Right
 -- should draw contours (to outline the shape)
 lut :: [[(Side, Side)]]
 lut = [[],                          -- 0000
-       [(Upperr,Right)],             -- 000d
-       [(Left,Upperr)],              -- 00c0
+       [(Upper,Right)],             -- 000d
+       [(Left,Upper)],              -- 00c0
        [(Left,Right)],              -- 00cd
-       [(Right,Lowerr)],             -- 0b00
-       [(Upperr,Lowerr)],             -- 0b0d
-       [(Right,Lowerr),(Left,Upperr)],-- 0bc0
-       [(Left,Lowerr)],              -- 0bcd
-       [(Lowerr,Left)],              -- a000
-       [(Lowerr,Left),(Upperr,Right)],-- a00d
-       [(Lowerr,Upperr)],             -- a0c0
-       [(Lowerr,Right)],             -- a0cd
+       [(Right,Lower)],             -- 0b00
+       [(Upper,Lower)],             -- 0b0d
+       [(Right,Lower),(Left,Upper)],-- 0bc0
+       [(Left,Lower)],              -- 0bcd
+       [(Lower,Left)],              -- a000
+       [(Lower,Left),(Upper,Right)],-- a00d
+       [(Lower,Upper)],             -- a0c0
+       [(Lower,Right)],             -- a0cd
        [(Right,Left)],              -- ab00
-       [(Upperr,Left)],              -- ab0d
-       [(Right,Upperr)],             -- abc0
+       [(Upper,Left)],              -- ab0d
+       [(Right,Upper)],             -- abc0
        []]                          -- abcd
 
 index :: Shape -> Cell -> Int
@@ -133,8 +132,8 @@ pt shape ((xmin, ymin), (xmax, ymax)) side =
     case side of
         Left  -> zero shape (xmin, ymin) (xmin, ymax)
         Right -> zero shape (xmax, ymin) (xmax, ymax)
-        Lowerr -> zero shape (xmin, ymin) (xmax, ymin)
-        Upperr -> zero shape (xmin, ymax) (xmax, ymax)
+        Lower -> zero shape (xmin, ymin) (xmax, ymin)
+        Upper -> zero shape (xmin, ymax) (xmax, ymax)
 
 zero :: Shape -> Point -> Point -> Point
 zero s a@(ax, ay) b@(bx, by)
