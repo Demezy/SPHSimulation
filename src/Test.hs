@@ -10,8 +10,28 @@ import Data.Bifunctor
 
 import Objects
 
+data Tree_ a = Root (Tree_ a) (Tree_ a) (Tree_ a) (Tree_ a) |
+               Empty | Full | Leaf a
+     deriving (Show, Eq)
+
+data Side = Upper | Lower | Left | Right
+  deriving Show
 
 type Shape = Point -> Float
+type Min = Point
+type Max = Point
+type Cell = (Min, Max)
+type Tree = Tree_ Cell
+type Edge = (Point, Point)
+
+--------------------------------------------------------------------------------
+
+instance Foldable Tree_ where
+    foldMap f (Leaf a) = f a
+    foldMap f (Root a b c d) = mconcat $ map (foldMap f) [a, b, c, d]
+    foldMap _ _ = mempty
+
+--------------------------------------------------------------------------------
 
 circlee :: Point -> Float -> Shape
 circlee (x0, y0) r (x, y) = sqrt ((x0 - x)^2 + (y0 - y)^2) - r
@@ -19,20 +39,17 @@ circlee (x0, y0) r (x, y) = sqrt ((x0 - x)^2 + (y0 - y)^2) - r
 (∪) :: Shape -> Shape -> Shape
 a ∪ b = \p -> min (a p) (b p)
 
-type Min = Point
-type Max = Point
+shapes :: [Particle] -> Shape
+shapes = collecting
 
-hi :: [Particle] -> Shape
-hi = r
-
-r :: [Particle] -> Shape
-r []       = circlee (0,0) 0
-r [x]      = circlee (dx, dy) 2
+collecting :: [Particle] -> Shape
+collecting []       = circlee (0,0) 0
+collecting [x]      = circlee (dx, dy) 2
     where
         coordinate = position x
         dx = fst coordinate
         dy = snd coordinate
-r (x : xs) = circlee (dx, dy) 2 ∪ r xs
+collecting (x : xs) = circlee (dx, dy) 2 ∪ collecting xs
     where
         coordinate = position x
         dx = fst coordinate
@@ -47,14 +64,6 @@ r (x : xs) = circlee (dx, dy) 2 ∪ r xs
 --   | 0 | 1 |
 --   0-------1
 
-
-data Tree_ a = Root (Tree_ a) (Tree_ a) (Tree_ a) (Tree_ a) |
-               Empty | Full | Leaf a
-     deriving (Show, Eq)
-
-type Cell = (Min, Max)
-type Tree = Tree_ Cell
-
 buildTree :: Min -> Max -> Int -> Tree
 buildTree min max 0 = Leaf (min, max)
 buildTree (xmin, ymin) (xmax, ymax) i =
@@ -67,7 +76,6 @@ buildTree (xmin, ymin) (xmax, ymax) i =
 
 collapse :: Shape -> Tree -> Tree
 collapse shape leaf@(Leaf ((xmin, ymin), (xmax, ymax)))
-  | all (< 0) values = Full
   | all (>= 0) values = Empty
   | otherwise = leaf
   where
@@ -79,18 +87,6 @@ collapse shape (Root a b c d) =
         collapse' [Full, Full, Full, Full] = Full
         collapse' [q, r, s, t] = Root q r s t
 collapse _ t = t
-
---------------------------------------------------------------------------------
-
-instance Foldable Tree_ where
-    foldMap f (Leaf a) = f a
-    foldMap f (Root a b c d) = mconcat $ map (foldMap f) [a, b, c, d]
-    foldMap _ _ = mempty
-
---------------------------------------------------------------------------------
-
-data Side = Upper | Lower | Left | Right
-  deriving Show
 
 -- This lookup table takes a bitmask abcd and
 -- returns a list of edges between which we
@@ -137,13 +133,12 @@ zero :: Shape -> Point -> Point -> Point
 zero s a@(ax, ay) b@(bx, by)
     | s a >= 0 = zero s b a
     | otherwise = zero' 0.5 0.25 10
-    where pos f = (ax * (1-f) + bx * f, ay * (1-f) + by * f)
-          zero' f step i
-           | i == 0 = pos f
-           | s (pos f) < 0 = zero' (f + step) (step / 2) (i - 1)
-           | otherwise = zero' (f - step) (step / 2) (i - 1)
-
-type Edge = (Point, Point)
+    where 
+        pos f = (ax * (1-f) + bx * f, ay * (1-f) + by * f)
+        zero' f step i
+         | i == 0 = pos f
+         | s (pos f) < 0 = zero' (f + step) (step / 2) (i - 1)
+         | otherwise = zero' (f - step) (step / 2) (i - 1)
 
 contours :: Shape -> Cell -> [Edge]
 contours shape cell = [(pt' a, pt' b) |
@@ -152,7 +147,7 @@ contours shape cell = [(pt' a, pt' b) |
 
 ----------------------------------------------------------------------------
 
-listOfVectors particles =  foldMap (contours (hi particles)) $ collapse (hi particles)$ buildTree (-500,-500) (500, 500) 9
+listOfVectors particles =  foldMap (contours (shapes particles)) $ collapse (shapes particles)$ buildTree (-500,-500) (500, 500) 9
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
