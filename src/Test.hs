@@ -2,7 +2,6 @@ module Test where
 
 import Data.Monoid
 import Data.Foldable
-    ( Foldable(length, foldMap, sum), all, concatMap )
 import Data.Maybe
 
 import Prelude hiding (Left, Right)
@@ -10,7 +9,6 @@ import Graphics.Gloss
 import Data.Bifunctor
 
 import Objects
-import Graphics.Gloss.Geometry.Line
 
 
 type Shape = Point -> Float
