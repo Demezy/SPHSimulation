@@ -45,7 +45,10 @@ circleIntercectsRectangle (Circle circleCenter radius) rectangle =
 data QuadTree a
   = Node Rectangle [QuadTree a]
   | Leaf Int Rectangle [a]
-  deriving (Show)
+
+instance Show a => Show (QuadTree a) where
+  show (Leaf _ b l) = "{Leaf " ++ show b ++ " " ++ show l ++ "}\n"
+  show (Node b l) = "{Node : " ++ mconcat (map show l) ++ "}\n"
 
 -- | Returns children of given node of QuadTree
 getChildren :: QuadTree a -> [QuadTree a]
@@ -58,6 +61,10 @@ getBoundaries (Leaf _ boundary _) = [boundary]
 getBoundaries (Node _ children) =
   foldr (\node boundaries -> boundaries ++ getBoundaries node) [] children
 
+getBoundary :: QuadTree a -> Rectangle
+getBoundary (Leaf _ boundary _) = boundary
+getBoundary (Node boundary _) = boundary
+
 -- | Construct QuadTree given capacity of leaves, initial boundaries,
 -- | function to convert object to a point and list of objects
 getTree :: Int -> Rectangle -> (a -> Point) -> [a] -> QuadTree a
@@ -65,26 +72,25 @@ getTree capacity boundaries = insertManyToQuadTree emptyTree
   where
     emptyTree = Leaf capacity boundaries []
 
--- | TODO fix inserting border points to multiple locations
 -- | Insert new object to a QuadTree given existing QuadTree, function to
 -- | convert object to a point and new object
 insertToQuadTree :: QuadTree a -> (a -> Point) -> a -> QuadTree a
-insertToQuadTree
-  leaf@(Leaf capacity boundaries elements)
-  getPosition
-  element
-    | length elements < capacity = Leaf capacity boundaries maybeInsertedElements
-    | otherwise = insertToQuadTree (subdivideQuadTree getPosition leaf) getPosition element
-    where
-      position = getPosition element
-      maybeInsertedElements =
-        if inRectangle boundaries position
-          then element : elements
-          else elements
+insertToQuadTree (Leaf capacity boundaries elements) getPosition element
+  | length elements < capacity = Leaf capacity boundaries maybeInsertedElements
+  | otherwise = insertToQuadTree subdivided getPosition element
+  where
+    subdivided = subdivideQuadTree getPosition (Leaf capacity boundaries elements)
+    position = getPosition element
+    maybeInsertedElements =
+      if inRectangle boundaries position then element : elements else elements
 insertToQuadTree (Node boundary trees) getPosition element =
-  Node boundary (map (\t -> insertToQuadTree t getPosition element) trees)
+  Node boundary newTrees
+  where
+    newTrees = mapFirst canInsert insert' trees
+    canInsert t = inRectangle (getBoundary t) (getPosition element)
+    insert' t = insertToQuadTree t getPosition element
 
--- | Applies function to an element from the list if it satisfies some property
+-- | Applies function to the first element from the list that satisfies some property
 mapFirst :: (a -> Bool) -> (a -> a) -> [a] -> [a]
 mapFirst _ _ [] = []
 mapFirst filt func (x : xs) =
