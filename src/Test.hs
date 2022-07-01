@@ -6,7 +6,7 @@ import Data.Foldable
 import Data.Maybe
 
 import Prelude hiding (Left, Right)
-import Numeric.LinearAlgebra.HMatrix hiding (inv)
+-- import Numeric.LinearAlgebra.HMatrix hiding (inv)
 import Graphics.Gloss
 import Data.Bifunctor
 

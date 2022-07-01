@@ -9,12 +9,17 @@ import Objects
 import TimeModule
 import SimulationModule
 import UsefulFunctions
+import QuadTree
+
+getParticleTree :: [Particle] -> QuadTree Particle
+getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
 
 uni :: Universe
 uni = Universe
   { simulationScale = (0.001,0.001)
   , environment     = env
-  , fluid           = sampleParticles
+  , fluid           = (sampleGridParticles ++ sampleParticles)
+  , fluidAsTree     = getParticleTree (sampleGridParticles ++ sampleParticles)
   , walls           = [wall1 ((700, 400), (700, -400)),
                        wall1 ((700, -400), (-700, -400)),
                        wall1 ((-700, -400), (-700, 400)),
@@ -38,18 +43,23 @@ rf = color green . polygon . shape
 
 env :: Environment
 env = Environment
-  { timeMultiplier       = 10000
+  { timeMultiplier       = 500
   , directionOfGravity   = (0, -1)
   , gravityAcceleration  = 1/1000000
   , densityOfEnvironment = 1
   }
 
+sampleGridParticles = [sampleParticle{position = (x*mult, y*mult)} | x <- [-d.. d], y <- [-d.. d]]
+  where
+    n = 50
+    mult = 50
+    d = sqrt (fromIntegral n) / 2
 sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
                                              velocity = (0, 0)}) [1.. n]
   where
-    n = 70
+    n = 50
     angle x = (2 * pi * x) / n
-    r = 200
+    r = 400
 
 sampleParticle :: Particle
 sampleParticle = Particle
@@ -69,7 +79,7 @@ conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
   , stiffness       = 0.15
-  , smoothingLength = 10000
+  , smoothingLength = 200
   , mass            = 1e-1
   , viscosity       = 1e-2
   , surfaceTension  = 85
@@ -85,7 +95,7 @@ conf2 :: FluidConfig
 conf2 = FluidConfig
   { coloring        = red
   , stiffness       = 1
-  , smoothingLength = 10000
+  , smoothingLength = 200
   , mass            = 1
   , viscosity       = 0
   , surfaceTension  = 0
@@ -110,18 +120,22 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
 
 -- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
-simulation dt universe = universe{fluid = particlesNew}
+simulation dt universe = universe{fluid = particlesNew,
+                                 fluidAsTree = newTree}
   where
     time = dt* timeMultiplier (environment universe)
     particlesOld = fluid universe
+    particlesAsTreeOld = fluidAsTree universe
     env = environment universe
     density = densityOfEnvironment env
+
     particlesNew = map (applyVelocity' . applyForces') particlesOld
+    newTree = getParticleTree particlesNew
     applyVelocity' p = applyVelocity p time
     -- applyForces' p = applyForce p (_totalForces p) time
     envDensity = densityOfEnvironment env
     densityMap = getDensityMap (getDensityDict particlesOld) envDensity
-    applyForces' p = applyForce p (totalForce particlesOld densityMap  p env) time
+    applyForces' p = applyForce p (totalForce particlesAsTreeOld densityMap  p env) time
     -- applyForces' p = applyForce p (gravityForceOfParticle p env ) time
 
 

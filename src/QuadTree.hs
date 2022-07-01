@@ -134,7 +134,12 @@ quarterBoundaries boundaries =
 -- | Quadtree, function to convert object to a point, point and radius
 getObjectsInRadius :: QuadTree a -> (a -> Point) -> Point -> Float -> [a]
 getObjectsInRadius (Leaf _ boundary objects) getPosition center radius =
-  filter (inCircle (Circle center radius) . getPosition) objects
+  filter inCircleButNotCenter objects
+    where
+      inCircleButNotCenter object = inCircle (Circle center radius) pos && pos /= center
+        where
+          pos = getPosition object
+
 getObjectsInRadius (Node boundary children) getPosition center radius =
   if circleIntercectsRectangle (Circle center radius) boundary
     then mconcat (map (\x -> getObjectsInRadius x getPosition center radius) children)
