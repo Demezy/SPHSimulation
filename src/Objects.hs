@@ -7,6 +7,7 @@ module Objects
     , Solid (..)
     , KernelFunc
     , Force
+    , Collider (..)
     ) where
 
 import Graphics.Gloss (Point, Vector, Path, Picture, Color)
@@ -23,14 +24,19 @@ data Universe = Universe
 data Particle = Particle
   { position :: Point
   , velocity :: Vector
+  , radius :: Float
   , config   :: FluidConfig
   }
 instance Show Particle where
-  show (Particle pos vel _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
+  show (Particle pos vel _ _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
 instance Eq Particle where
   (==) p1 p2 = position p1 == position p2
 
 data Wall = Wall {pos :: (Point, Point), renderFunc :: Wall -> Picture}
+
+-- | CircleCollider :: centerPoint radius
+--   SegmentCollider :: (point1, point2) perpendicularDirection
+data Collider = CircleCollider Point Float | SegmentCollider (Point, Point) Vector deriving (Eq)
 
 data Solid = Solid
   { isMovable      :: Bool

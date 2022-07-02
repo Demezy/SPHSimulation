@@ -2,6 +2,7 @@ module UsefulFunctions where
 
 import Graphics.Gloss
 import Objects
+import Data.Maybe
 
 --Four elements in a tuple-----------------------------------------------------
 
@@ -69,6 +70,32 @@ segmentNearestPoint (e0, e1) ((a0, a1), (b0, b1))
 -- | Distance between segment and point
 pointSegmentDistance :: Point -> (Point, Point) -> Float
 pointSegmentDistance p w = distance p (segmentNearestPoint p w)
+
+-- 0 <= angle <= pi
+vectorsAngle :: Vector -> Vector -> Float
+vectorsAngle (x0, y0) (x1, y1) = acos v_cos
+  where
+    v_cos = (x0 * x1 + y0 * y1)
+          / (vectorMagnitude (x0, y0) * vectorMagnitude (x1, y1))
+
+-- | True iff angle between vectors <= pi/2
+sameDirection :: Vector -> Vector -> Bool
+sameDirection (dx, dy) (px, py) = 0 <= v_cos && v_cos <= 1
+  where
+    v_cos = (px * dx + py * dy) / (vectorMagnitude (px, py) * vectorMagnitude (dx, dy))
+
+-- | Find vector projection of A on B
+-- vectorProjection :: B -> A
+vectorProjection :: Vector -> Vector -> Vector
+vectorProjection (bx, by) (ax, ay) = (ax', ay')
+  where
+    b = vectorMagnitude (bx, by)
+    t = ((ax * bx) + (ay * by)) / (b * b)
+    
+    ax' = t * bx
+    ay' = t * by
+
+-------------------------------------------------------------------------------
 
 -- | Changing speed of time.
 changeTimeMul :: Float -> Universe -> Universe

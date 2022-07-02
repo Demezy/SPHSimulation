@@ -88,7 +88,7 @@ tensionForceFunc densityMap particleI particleJ = forceVector
     densityJ = densityMap particleJ
 
     absForce = 1 / densityJ
-    dir = vectorDiff (position particleJ) (position particleI)
+    dir = vectorDiff (position particleI) (position particleJ)
 
     forceVector = normalizeVector dir absForce
 
@@ -147,12 +147,11 @@ totalForce :: QuadTree Particle  -- Fluid
            -> Particle    -- Main particle
            -> Environment -- environment density
            -> Vector      -- resulting force vector
-totalForce tree densityMap particleI env = vectorSum [pressureForce particles densityMap particleI envDensity,
-                                                viscosityForce particles densityMap particleI,
-                                                tensionForce particles densityMap particleI,
-                                                frictionForce particleI
-                                                --gravityForceOfParticle particleI env
-                                                ]
+totalForce tree densityMap particleI env = vectorSum [--pressureForce particles densityMap particleI envDensity,
+                                                      --viscosityForce particles densityMap particleI,
+                                                      --tensionForce particles densityMap particleI,
+                                                      --frictionForce particleI,
+                                                      gravityForceOfParticle particleI env]
   where
     envDensity =  densityOfEnvironment env
     particles = findNeighbours tree (position particleI) h

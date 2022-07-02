@@ -18,12 +18,13 @@ uni :: Universe
 uni = Universe
   { simulationScale = (0.001,0.001)
   , environment     = env
-  , fluid           = (sampleGridParticles ++ sampleParticles)
+  , fluid           = sampleGridParticles ++ sampleParticles
   , fluidAsTree     = getParticleTree (sampleGridParticles ++ sampleParticles)
-  , walls           = [wall1 ((700, 400), (700, -400)),
-                       wall1 ((700, -400), (-700, -400)),
-                       wall1 ((-700, -400), (-700, 400)),
-                       wall1 ((-700, 400), (700, 400))]
+  , walls           = [wall1 ((750, 400), (500, -400)),
+                       wall1 ((500, -400), (0.1, -50)),
+                       wall1 ((0.1, -50), (-500, -400)),
+                       wall1 ((-500, -400), (-750, 400)),
+                       wall1 ((-750, 400), (750, 400))]
   }
 
 wall1 :: (Point, Point) -> Wall
@@ -45,26 +46,28 @@ env :: Environment
 env = Environment
   { timeMultiplier       = 500
   , directionOfGravity   = (0, -1)
-  , gravityAcceleration  = 1/1000000
+  , gravityAcceleration  = 1/10000
   , densityOfEnvironment = 1
   }
 
 sampleGridParticles = [sampleParticle{position = (x*mult, y*mult)} | x <- [-d.. d], y <- [-d.. d]]
   where
-    n = 50
+    n = 0
     mult = 50
     d = sqrt (fromIntegral n) / 2
-sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2)),
+sampleParticles = map (\x -> sampleParticle {position = (sin (angle x) * r, cos (angle x) * (r / 2) + y_pos),
                                              velocity = (0, 0)}) [1.. n]
   where
     n = 50
     angle x = (2 * pi * x) / n
-    r = 400
+    r = 150
+    y_pos = 50
 
 sampleParticle :: Particle
 sampleParticle = Particle
   { position   = (0, 0)
   , velocity   = (0, 0)
+  , radius     = 10
   , config     = conf1
   }
 
@@ -72,19 +75,20 @@ sampleParticle2 :: Particle
 sampleParticle2 = Particle
   { position    = (1, 0)
   , velocity    = (0, 0)
+  , radius      = 10
   , config      = conf2
   }
 
 conf1 :: FluidConfig
 conf1 = FluidConfig
   { coloring        = black
-  , stiffness       = 0.15
+  , stiffness       = 1
   , smoothingLength = 200
-  , mass            = 1e-1
-  , viscosity       = 1e-2
-  , surfaceTension  = 85
-  , friction        = 1e-6
-  , minSpeed        = 1e-2
+  , mass            = 1
+  , viscosity       = 1
+  , surfaceTension  = 1
+  , friction        = 0
+  , minSpeed        = 0
   , densityKernel   = kernelFunction0
   , pressureKernel  = kernelFunction1
   , viscosityKernel = kernelFunction2
@@ -129,9 +133,9 @@ simulation dt universe = universe{fluid = particlesNew,
     env = environment universe
     density = densityOfEnvironment env
 
-    particlesNew = map (applyVelocity' . applyForces') particlesOld
+    particlesNew = map (applyForces' . applyVelocity') particlesOld
     newTree = getParticleTree particlesNew
-    applyVelocity' p = applyVelocity p time
+    applyVelocity' p = applyVelocity p time (walls universe)
     -- applyForces' p = applyForce p (_totalForces p) time
     envDensity = densityOfEnvironment env
     densityMap = getDensityMap (getDensityDict particlesOld) envDensity

@@ -52,10 +52,10 @@ render from to oldColor = map renderCircle circleTuple
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 radius oldColor)
+renderParticle particle = pictures (render 0 r oldColor)
   where
     oldColor = coloring (config particle)
-    radius = 10
+    r = radius particle
 
 -- | Render Particle at given coordinates.
 renderParticleAt :: Particle -> Picture
