@@ -1,4 +1,4 @@
-module Test where
+module Metaballs where
 
 import Data.Monoid
 import Data.Foldable

@@ -6,7 +6,7 @@ import Objects
 import RenderingOfUniverse
 import SimulationModule
 import UsefulFunctions
-import Test 
+import Metaballs 
 import QuadTree
 
 main :: IO ()

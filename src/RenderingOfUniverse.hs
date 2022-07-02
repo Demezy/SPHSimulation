@@ -4,7 +4,7 @@ import Data.Tuple
 import Graphics.Gloss
 import Objects
 import UsefulFunctions
--- import Test
+import Metaballs
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones

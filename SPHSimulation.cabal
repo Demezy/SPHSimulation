@@ -30,7 +30,7 @@ library
       QuadTree
       RenderingOfUniverse
       SimulationModule
-      Test
+      Metaballs
       TimeModule
       UsefulFunctions
   other-modules:
