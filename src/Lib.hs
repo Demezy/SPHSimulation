@@ -8,6 +8,7 @@ import Graphics.Gloss
 import Objects
 import TimeModule
 import SimulationModule
+import UserInteraction
 import UsefulFunctions
 import QuadTree
 
@@ -142,10 +143,4 @@ simulation dt universe = universe{fluid = particlesNew,
     applyForces' p = applyForce p (totalForce particlesAsTreeOld densityMap  p env) time
     -- applyForces' p = applyForce p (gravityForceOfParticle p env ) time
 
-
--- Events ---------------------------------------------------------------------
-handleEvent :: Event -> Universe -> Universe
-handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
-handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
-handleEvent _ universe = universe
 
