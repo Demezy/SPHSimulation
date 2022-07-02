@@ -19,6 +19,7 @@ data Universe = Universe
   , fluid           :: [Particle]
   , fluidAsTree     :: QuadTree Particle
   , walls           :: [Wall]
+  , marker :: Point
   }
 
 data Particle = Particle
