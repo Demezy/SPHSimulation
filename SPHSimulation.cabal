@@ -34,6 +34,7 @@ library
       SimulationModule
       TimeModule
       UsefulFunctions
+      UserInteraction
   other-modules:
       Paths_SPHSimulation
   hs-source-dirs:

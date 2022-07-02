@@ -26,6 +26,7 @@ uni = Universe
                        wall1 ((0.1, -50), (-500, -400)),
                        wall1 ((-500, -400), (-750, 400)),
                        wall1 ((-750, 400), (750, 400))]
+  , marker = (0,0)
   }
 
 wall1 :: (Point, Point) -> Wall

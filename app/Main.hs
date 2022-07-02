@@ -9,6 +9,7 @@ import UsefulFunctions
 import Metaballs
 import QuadTree
 import Cluster
+import UserInteraction
 
 main :: IO ()
 main = glossExample
