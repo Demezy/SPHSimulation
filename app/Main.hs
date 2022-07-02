@@ -6,8 +6,10 @@ import Objects
 import RenderingOfUniverse
 import SimulationModule
 import UsefulFunctions
-import Metaballs 
+import Metaballs
 import QuadTree
+import Cluster
 
 main :: IO ()
-main = glossExample  
+main = glossExample
+    --glossExample  
