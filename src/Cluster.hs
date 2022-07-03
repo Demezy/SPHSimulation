@@ -7,10 +7,6 @@ import Data.List
 import Data.Bool
 import SimulationModule
 
-
-getParticleTree :: [Particle] -> QuadTree Particle
-getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
-
 data Map = Visited Particle
          | NotVisited Particle
          | Noise      Particle
