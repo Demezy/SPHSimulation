@@ -3,6 +3,7 @@ module UsefulFunctions where
 import Graphics.Gloss
 import Objects
 import Data.Maybe
+import QuadTree
 
 --Four elements in a tuple-----------------------------------------------------
 
@@ -106,3 +107,5 @@ changeTimeMul x universe = universe{environment = newEnv}
     newEnv = env{timeMultiplier = prevTimeMultiplier + x}
     -- new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
 
+getParticleTree :: [Particle] -> QuadTree Particle
+getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
