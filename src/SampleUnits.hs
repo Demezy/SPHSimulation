@@ -23,7 +23,7 @@ defaultUniverse =
       fluid = [],
       fluidAsTree = getParticleTree [],
       walls = [],
-      marker = (0, 0)
+      marker = (-1000, -1000)
     }
 
 sampleParticle :: Particle

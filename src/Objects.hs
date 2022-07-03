@@ -8,10 +8,12 @@ module Objects
     , KernelFunc
     , Force
     , Collider (..)
+    , Cursor
     ) where
 
 import Graphics.Gloss (Point, Vector, Path, Picture, Color)
 import QuadTree (QuadTree)
+
 
 data Universe = Universe
   { simulationScale :: (Float, Float)
@@ -19,9 +21,10 @@ data Universe = Universe
   , fluid           :: [Particle]
   , fluidAsTree     :: QuadTree Particle
   , walls           :: [Wall]
-  , marker :: Point
+  , marker :: Cursor
   }
 
+type Cursor = Point
 data Particle = Particle
   { position :: Point
   , velocity :: Vector

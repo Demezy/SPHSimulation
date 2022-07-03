@@ -50,9 +50,13 @@ startDrawWall uni point = uni{
 
 stopDrawWall :: Universe -> Point -> Universe
 stopDrawWall uni point = uni{
-  walls =newWall : walls uni
+  walls = newWall : walls uni,
+  marker = hideCursor (marker uni)
   }
   where
     newWall = wall1 (begin, end)
     begin = marker uni
     end = point
+-- = hide mark cursor = --
+hideCursor :: Cursor -> Cursor
+hideCursor _ = (-1000, -1000)
