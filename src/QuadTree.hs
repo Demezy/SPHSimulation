@@ -1,6 +1,7 @@
 module QuadTree where
 
 import Graphics.Gloss (Point)
+import Debug.Trace
 
 data Circle = Circle Point Float deriving (Show, Eq)
 
@@ -125,7 +126,7 @@ quarterBoundaries boundaries =
   where
     (bottomLeft, topRight) = properRectangle boundaries
     bottomRight = (fst topRight, snd bottomLeft)
-    topLeft = (fst bottomLeft, fst topRight)
+    topLeft = (fst bottomLeft, snd topRight)
     boundaryList = [bottomLeft, topRight]
     midCoords f = sum (map f boundaryList) / 2
     middle = (midCoords fst, midCoords snd)
@@ -148,3 +149,9 @@ getObjectsInRadius (Node boundary children) getPosition center radius =
 getElementsQuadTree :: QuadTree a -> [a]
 getElementsQuadTree (Leaf _ _ objects) = objects
 getElementsQuadTree (Node _ children) = concatMap getElementsQuadTree children
+
+sampleRange = [(x, y) | x <- [-2..2], y <- [-2..2]]
+
+samplePoints = getElementsQuadTree (getTree 1 ((-10, -10), (10, 10)) id sampleRange)
+
+
