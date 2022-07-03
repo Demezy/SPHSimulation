@@ -3,6 +3,8 @@ module Lib
   )
 where
 
+import Debug.Trace
+import GHC.List (length)
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import InitUniverse
@@ -13,6 +15,7 @@ import SimulationModule
 import TimeModule
 import UsefulFunctions
 import UserInteraction
+import Prelude hiding (length)
 
 solid :: Solid
 solid =
@@ -34,7 +37,9 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
     initialWorld = uni
     renderWorld world = renderUniverse world
     handleWorld event world = handleEvent event world
-    updateWorld dt world = simulation dt world
+    updateWorld dt world = trace (debugInfo world) $ simulation dt world
+      where
+        debugInfo = show . length . fluid
 
 -- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
