@@ -5,7 +5,6 @@ import Graphics.Gloss.Interface.Pure.Game
 import Objects
 import UsefulFunctions
 import SampleUnits
-import Data.Fixed (Uni)
 
 
 
@@ -45,7 +44,15 @@ addParticleToUniverse universe point = universe
 
 -- == draw walls == 
 startDrawWall :: Universe -> Point -> Universe
-startDrawWall u _ = u
+startDrawWall uni point = uni{
+  marker = point
+  }
 
 stopDrawWall :: Universe -> Point -> Universe
-stopDrawWall u _ = u
+stopDrawWall uni point = uni{
+  walls =newWall : walls uni
+  }
+  where
+    newWall = wall1 (begin, end)
+    begin = marker uni
+    end = point
