@@ -9,6 +9,9 @@ import Graphics.Gloss
 import Data.Bifunctor
 import SimulationModule (findNeighbours)
 import Objects
+import QuadTree
+import Data.Foldable (Foldable)
+import Cluster (getParticleTree, particle)
 
 data Tree_ a = Root (Tree_ a) (Tree_ a) (Tree_ a) (Tree_ a) |
                Empty | Full | Leaff a
@@ -74,7 +77,7 @@ collapse shape leaf@(Leaff ((xmin, ymin), (xmax, ymax)))
   where
       values = [shape (x, y) | x <- [xmin, xmax], y <- [ymin, ymax]]
 collapse shape (Root a b c d) =
-    collapse' $ map (collapse shape) [a, b, c, d]
+  collapse' $ map (collapse shape) [a, b, c, d]
     where
         сollapse' [Empty, Empty, Empty, Empty] = Empty
         collapse' [Full, Full, Full, Full] = Full
@@ -122,7 +125,7 @@ pt shape ((xmin, ymin), (xmax, ymax)) side =
 zero :: Shape -> Point -> Point -> Point
 zero s a@(ax, ay) b@(bx, by)
     | s a >= 0 = zero s b a
-    | otherwise = zero' 0.5 0.25 10
+    | otherwise = zero' 0.5 0.1 10
     where
         pos f = (ax * (1-f) + bx * f, ay * (1-f) + by * f)
         zero' f step i
@@ -137,7 +140,7 @@ contours shape cell = [(pt' a, pt' b) |
 
 ----------------------------------------------------------------------------
 listOfVectors :: [Particle] -> [Edge]
-listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 9
+listOfVectors particles = contours (shapes particles) ((-2000, -2000), (2000, 2000))
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
