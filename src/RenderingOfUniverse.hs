@@ -68,11 +68,11 @@ renderParticleAt particle = translate dx dy (renderParticle particle)
 
 -- | Render all Particles into Universe.
 renderParticles :: [Particle] -> Picture
---renderParticles particles = pictures (map renderParticleAt particles)
+renderParticles particles = pictures (map renderParticleAt particles)
 
 -- | Render all Particles into Universe.
 --renderParticles :: [Particle] -> Picture
-renderParticles particles = scale 5.0 5.0 (pictures (vectorsToPicture particles))
+--renderParticles particles = scale 5.0 5.0 (pictures (vectorsToPicture particles))
 
 -- | Render Solid by itself.
 renderWall :: Wall -> Picture
@@ -96,14 +96,7 @@ renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) 
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderWalls solids <> debug
+renderUniverse universe = renderParticles particles <> renderWalls solids
   where
     particles = fluid universe
     solids = walls universe
-
-    r = 2
-    debug = translate (fst mark) (snd mark) (renderCircle r)
-    mark :: Point
-    mark =  marker universe
-    renderCircle radius = color red (thickCircle ((radius + 1) / 2) (radius + 1))
-
