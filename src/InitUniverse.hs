@@ -21,7 +21,7 @@ uni =
 
 sampleGridParticles = [sampleParticle {position = (x * mult, y * mult)} | x <- [-d .. d], y <- [-d .. d]]
   where
-    n = 50
+    n = 0
     mult = 60
     d = sqrt (fromIntegral n) / 2
 
@@ -35,7 +35,7 @@ sampleParticles =
     )
     [1 .. n]
   where
-    n = 0
+    n = 100
     angle x = (2 * pi * x) / n
-    r = 150
+    r = 400
     y_pos = 50
