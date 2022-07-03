@@ -103,7 +103,8 @@ debugTree tree = pictures (map renderBoundaries boundaries)
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderWalls solids <> debugTree (fluidAsTree universe)
+renderUniverse universe = renderParticles particles <> renderWalls solids 
+  -- <> debugTree (fluidAsTree universe)
   where
     particles = fluid universe
     solids = walls universe

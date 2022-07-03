@@ -12,8 +12,8 @@ import SampleUnits
 
 handleEvent :: Event -> Universe -> Universe
 -- handle keyboard
-handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
-handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
+handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-100) universe
+handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 100 universe
 -- handle mouse
 -- prefer explicitly use universe as argument, so wouldn't omit it!
 handleEvent (EventKey (MouseButton LeftButton) Down _ point) universe = addParticleToUniverse universe point

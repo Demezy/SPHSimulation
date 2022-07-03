@@ -11,18 +11,18 @@ uni =
       fluidAsTree = getParticleTree (sampleGridParticles ++ sampleParticles),
       walls =
         [
-          wall1 ((750, 400), (500, -400)),
-          wall1 ((500, -400), (0.1, -50)),
-          wall1 ((0.1, -50), (-500, -400)),
-          wall1 ((-500, -400), (-750, 400)),
-          wall1 ((-750, 400), (750, 400))
+          -- wall1 ((750, 400), (500, -400)),
+          -- wall1 ((500, -400), (0.1, -50)),
+          -- wall1 ((0.1, -50), (-500, -400)),
+          -- wall1 ((-500, -400), (-750, 400)),
+          -- wall1 ((-750, 400), (750, 400))
         ]
     }
 
 sampleGridParticles = [sampleParticle {position = (x * mult, y * mult)} | x <- [-d .. d], y <- [-d .. d]]
   where
     n = 50
-    mult = 50
+    mult = 60
     d = sqrt (fromIntegral n) / 2
 
 sampleParticles =
@@ -35,7 +35,7 @@ sampleParticles =
     )
     [1 .. n]
   where
-    n = 50
+    n = 0
     angle x = (2 * pi * x) / n
     r = 150
     y_pos = 50

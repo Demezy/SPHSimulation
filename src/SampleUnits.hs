@@ -11,7 +11,7 @@ defaultEnvironment =
   Environment
     { timeMultiplier = 50,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 1 / 10000,
+      gravityAcceleration = 0,
       densityOfEnvironment = 1
     }
 
@@ -50,12 +50,12 @@ conf1 :: FluidConfig
 conf1 =
   FluidConfig
     { coloring = black,
-      stiffness = 1,
+      stiffness = 1e-3,
       smoothingLength = 200,
-      mass = 1,
-      viscosity = 0.001,
-      surfaceTension = 0.001,
-      friction = 0.01,
+      mass = 1e-2,
+      viscosity = 0.7,
+      surfaceTension = 0.3,
+      friction = 1e-2,
       minSpeed = 0,
       densityKernel = kernelFunction0,
       pressureKernel = kernelFunction1,
