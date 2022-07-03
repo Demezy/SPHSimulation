@@ -104,7 +104,13 @@ changeTimeMul x universe = universe{environment = newEnv}
   where
     env = environment universe
     prevTimeMultiplier = timeMultiplier env
-    newEnv = env{timeMultiplier = prevTimeMultiplier + x}
+    newEnv = env{timeMultiplier = 
+      if prevTimeMultiplier + x < 0 then
+        0
+      else
+        prevTimeMultiplier + x 
+    }
+
     -- new_e (Environment t gDir gAcc d) = Environment (max (t + x) 1) gDir gAcc d
 
 getParticleTree :: [Particle] -> QuadTree Particle
