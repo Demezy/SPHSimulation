@@ -38,12 +38,7 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
     initialWorld = uni
     renderWorld world = renderUniverse world
     handleWorld event world = handleEvent event world
-    updateWorld dt world = trace (debugInfo world) $ simulation dt world
-      where
-        debugInfo :: Universe -> String
-        debugInfo world = printf "Particles: %d Tree: %s" numberOfParticles jsonTree
-        numberOfParticles = length . fluid $ world
-        jsonTree = show . fluidAsTree $ world
+    updateWorld dt world =  simulation dt world
 
 -- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
