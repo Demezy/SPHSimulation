@@ -15,4 +15,3 @@ import SampleUnits
 
 main :: IO ()
 main = glossExample
-    --glossExample  
