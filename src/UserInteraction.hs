@@ -4,6 +4,22 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import Objects
 import UsefulFunctions
+import SampleUnits
+
+
+
+-- TODO determine parameters for users particles.
+-- For now use default one
+createParticle :: Point -- ^ 
+  -> Particle
+createParticle point = sampleParticle {position = point}
+
+addParticleToUniverse :: Universe -> Point -> Universe
+addParticleToUniverse universe point = universe
+  {
+    fluid = createParticle point : fluid universe
+  }
+
 
 handleEvent :: Event -> Universe -> Universe
 -- handle keyboard
