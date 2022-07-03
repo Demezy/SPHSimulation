@@ -6,6 +6,7 @@ import Objects
 import UsefulFunctions
 import Metaballs
 import Cluster
+import QuadTree
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -84,19 +85,25 @@ renderWall wall = rendering wall
 renderWalls :: [Wall] -> Picture
 renderWalls solids = pictures (map renderWall solids)
 
-renderDebugInfo :: Universe -> Picture
-renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
+-- renderDebugInfo :: Universe -> Picture
+-- renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
+--   where
+--     margin = 20
+--     scale = 0.1
+--     renderValue (name, value) = Color white (Scale scale scale (Text (name ++ ": " ++ show value)))
+--     moveToTopLeft = translate (-700) 400
+--     moveDown = translate 0 (-margin)
+--     renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
+
+debugTree :: QuadTree Particle -> Picture
+debugTree tree = pictures (map renderBoundaries boundaries)
   where
-    margin = 20
-    scale = 0.1
-    renderValue (name, value) = Color white (Scale scale scale (Text (name ++ ": " ++ show value)))
-    moveToTopLeft = translate (-700) 400
-    moveDown = translate 0 (-margin)
-    renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
+    boundaries = map properRectangle (getBoundaries tree)
+    renderBoundaries (p1, p2) = color red (line [p1, (fst p2, snd p1), p2, (fst p1, snd p2)])
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderWalls solids
+renderUniverse universe = renderParticles particles <> renderWalls solids <> debugTree (fluidAsTree universe)
   where
     particles = fluid universe
     solids = walls universe
