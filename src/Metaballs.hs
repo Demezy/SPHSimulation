@@ -7,11 +7,14 @@ import Data.Maybe
 import Prelude hiding (Left, Right)
 import Graphics.Gloss
 import Data.Bifunctor
-
+import SimulationModule (findNeighbours)
 import Objects
+import QuadTree
+import Data.Foldable (Foldable)
+import Cluster (getParticleTree, particle)
 
 data Tree_ a = Root (Tree_ a) (Tree_ a) (Tree_ a) (Tree_ a) |
-               Empty | Full | Leaf a
+               Empty | Full | Leaff a
      deriving (Show, Eq)
 
 data Side = Upper | Lower | Left | Right
@@ -27,7 +30,7 @@ type Edge = (Point, Point)
 --------------------------------------------------------------------------------
 
 instance Foldable Tree_ where
-    foldMap f (Leaf a) = f a
+    foldMap f (Leaff a) = f a
     foldMap f (Root a b c d) = mconcat $ map (foldMap f) [a, b, c, d]
     foldMap _ _ = mempty
 
@@ -57,15 +60,8 @@ collecting (x : xs) = circlee (dx, dy) 2 ∪ collecting xs
 
 --------------------------------------------------------------------------------
 
--- General rule of quadtree ordering:
---   2-------3
---   | 2 | 3 |
---   ---------
---   | 0 | 1 |
---   0-------1
-
 buildTree :: Min -> Max -> Int -> Tree
-buildTree min max 0 = Leaf (min, max)
+buildTree min max 0 = Leaff (min, max)
 buildTree (xmin, ymin) (xmax, ymax) i =
     Root (buildTree (xmin, ymin) (xmid, ymid) (i - 1))
          (buildTree (xmid, ymin) (xmax, ymid) (i - 1))
@@ -75,22 +71,19 @@ buildTree (xmin, ymin) (xmax, ymax) i =
           ymid = (ymin + ymax) / 2
 
 collapse :: Shape -> Tree -> Tree
-collapse shape leaf@(Leaf ((xmin, ymin), (xmax, ymax)))
+collapse shape leaf@(Leaff ((xmin, ymin), (xmax, ymax)))
   | all (>= 0) values = Empty
   | otherwise = leaf
   where
       values = [shape (x, y) | x <- [xmin, xmax], y <- [ymin, ymax]]
 collapse shape (Root a b c d) =
-    collapse' $ map (collapse shape) [a, b, c, d]
+  collapse' $ map (collapse shape) [a, b, c, d]
     where
         сollapse' [Empty, Empty, Empty, Empty] = Empty
         collapse' [Full, Full, Full, Full] = Full
         collapse' [q, r, s, t] = Root q r s t
 collapse _ t = t
 
--- This lookup table takes a bitmask abcd and
--- returns a list of edges between which we
--- should draw contours (to outline the shape)
 lut :: [[(Side, Side)]]
 lut = [[],                          -- 0000
        [(Upper,Right)],             -- 000d
@@ -132,8 +125,8 @@ pt shape ((xmin, ymin), (xmax, ymax)) side =
 zero :: Shape -> Point -> Point -> Point
 zero s a@(ax, ay) b@(bx, by)
     | s a >= 0 = zero s b a
-    | otherwise = zero' 0.5 0.25 10
-    where 
+    | otherwise = zero' 0.5 0.1 10
+    where
         pos f = (ax * (1-f) + bx * f, ay * (1-f) + by * f)
         zero' f step i
          | i == 0 = pos f
@@ -146,8 +139,9 @@ contours shape cell = [(pt' a, pt' b) |
     where pt' = pt shape cell
 
 ----------------------------------------------------------------------------
-
-listOfVectors particles =  foldMap (contours (shapes particles)) $ collapse (shapes particles)$ buildTree (-500,-500) (500, 500) 9
+listOfVectors :: [Particle] -> [Edge]
+listOfVectors particles = contours (shapes particles) ((-2000, -2000), (2000, 2000))
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
+----------------------------------------------------------------------------
