@@ -4,6 +4,7 @@ module Lib
 where
 
 import Debug.Trace
+import Text.Printf
 import GHC.List (length)
 import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
@@ -39,7 +40,10 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
     handleWorld event world = handleEvent event world
     updateWorld dt world = trace (debugInfo world) $ simulation dt world
       where
-        debugInfo = show . length . fluid
+        debugInfo :: Universe -> String
+        debugInfo world = printf "Particles: %d Tree: %s" numberOfParticles jsonTree
+        numberOfParticles = length . fluid $ world
+        jsonTree = show . fluidAsTree $ world
 
 -- Simulation -----------------------------------------------------------------
 simulation :: Float -> Universe -> Universe
