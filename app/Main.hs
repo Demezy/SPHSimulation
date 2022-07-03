@@ -10,6 +10,8 @@ import Metaballs
 import QuadTree
 import Cluster
 import UserInteraction
+import InitUniverse
+import SampleUnits
 
 main :: IO ()
 main = glossExample
