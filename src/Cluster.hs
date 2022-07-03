@@ -59,43 +59,10 @@ expansion :: QuadTree Particle -> [Map] -> [Map] -> Float -> Int -> [Map] -> [Ma
 expansion _ [] pss _ _ _ = pss
 expansion tree (p:ps) pps eps minPts points =
      bool [] (expansion tree ps' pps' eps minPts points) (length neighbours >= minPts)
-     where 
+      where
          neighbours = findNeighbours tree (position (particle p)) eps
          ps'        = ps `union` filter (`notElem` pps) (toMap points neighbours)
          pps'       = bool pps (p:pps) (p `notElem` pps)
 
 toMap :: [Map] -> [Particle] -> [Map]
 toMap m ps = filter (\p -> particle p `elem` ps) m
-
-newtype MinPoint a = MinPoint Point
-
-newtype MaxPoint a = MaxPoint Point
-
-instance Semigroup (MinPoint a) where
-  MinPoint (x1, y1) <> MinPoint (x2, y2) = MinPoint (min (x1 - 5) (x2 - 5), min (y1 - 5) (y2 - 5))
-
-instance Semigroup (MaxPoint a) where
-  MaxPoint (x1, y1) <> MaxPoint (x2, y2) = MaxPoint (max (x1 + 5) (x2 + 5), max (y1 + 5) (y2 + 5))
-
-instance Monoid (MinPoint a) where
-  mempty = MinPoint (1000000, 1000000)
-
-instance Monoid (MaxPoint a) where
-  mempty = MaxPoint (-1000000, -1000000)
-
-findRectangle :: [QuadTree.Rectangle] -> QuadTree.Rectangle
-findRectangle particles = (findMin particles, findMax particles)
-
-findMin :: [QuadTree.Rectangle] -> Point
-findMin []       = fromMinPoint mempty
-findMin (x : xs) = fromMinPoint (MinPoint (fst x) <> MinPoint (findMin xs))
-
-findMax :: [QuadTree.Rectangle] -> Point
-findMax []       = fromMaxPoint mempty
-findMax (x : xs) = fromMaxPoint (MaxPoint (snd x) <> MaxPoint (findMax xs))
-
-fromMinPoint :: MinPoint a -> Point
-fromMinPoint (MinPoint p) = p
-
-fromMaxPoint :: MaxPoint a -> Point
-fromMaxPoint (MaxPoint p) = p
