@@ -9,7 +9,6 @@ import Graphics.Gloss
 import Data.Bifunctor
 import SimulationModule (findNeighbours)
 import Objects
-import QuadTree
 
 data Tree_ a = Root (Tree_ a) (Tree_ a) (Tree_ a) (Tree_ a) |
                Empty | Full | Leaff a
@@ -137,9 +136,6 @@ contours shape cell = [(pt' a, pt' b) |
     where pt' = pt shape cell
 
 ----------------------------------------------------------------------------
---listOfVectors :: [Particle] -> [Edge]
---listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 9
-
 listOfVectors :: [Particle] -> [Edge]
 listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 9
 
