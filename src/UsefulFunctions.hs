@@ -61,10 +61,10 @@ segmentNearestPoint (e0, e1) ((a0, a1), (b0, b1))
       (ab0, ab1) = vectorDiff (a0, a1) (b0, b1)
       (be0, be1) = vectorDiff (b0, b1) (e0, e1)
       (ae0, ae1) = vectorDiff (a0, a1) (e0, e1)
-      
+
       ab_be = ab0 * be0 + ab1 * be1
       ab_ae = ab0 * ae0 + ab1 * ae1
-      
+
       (dir0, dir1) = normalizeVector (ab0, ab1) 1
       dotP = dir0 * ae0 + dir1 * ae1
 
@@ -92,7 +92,7 @@ vectorProjection (bx, by) (ax, ay) = (ax', ay')
   where
     b = vectorMagnitude (bx, by)
     t = ((ax * bx) + (ay * by)) / (b * b)
-    
+
     ax' = t * bx
     ay' = t * by
 
@@ -109,3 +109,13 @@ changeTimeMul x universe = universe{environment = newEnv}
 
 getParticleTree :: [Particle] -> QuadTree Particle
 getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
+
+
+deleteOutOfBounds :: [Particle] -> [Particle]
+deleteOutOfBounds = filter isPointInBounds
+  where
+    isPointInBounds p = abs x < limit && abs y < limit
+      where
+        (x, y) = position p
+        limit = 2000
+

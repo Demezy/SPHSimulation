@@ -52,7 +52,8 @@ simulation dt universe =
     density = densityOfEnvironment env
     time = dt * timeMultiplier (environment universe)
     -- New values
-    particlesNew = map (applyForces' . applyVelocity' . particleDensity') particlesOld
+    particlesNew' = map (applyForces' . applyVelocity' . particleDensity') particlesOld
+    particlesNew = deleteOutOfBounds particlesNew'
     newTree = getParticleTree particlesNew
     -- Changing particles
     applyVelocity' p = applyVelocity p time (walls universe)
