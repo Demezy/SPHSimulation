@@ -144,3 +144,7 @@ getObjectsInRadius (Node boundary children) getPosition center radius =
   if circleIntercectsRectangle (Circle center radius) boundary
     then mconcat (map (\x -> getObjectsInRadius x getPosition center radius) children)
     else []
+
+getElementsQuadTree :: QuadTree a -> [a]
+getElementsQuadTree (Leaf _ _ objects) = objects
+getElementsQuadTree (Node _ children) = concatMap getElementsQuadTree children
