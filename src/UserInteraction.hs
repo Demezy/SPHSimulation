@@ -8,6 +8,21 @@ import SampleUnits
 
 
 
+-- ==== Game Logic ====
+
+handleEvent :: Event -> Universe -> Universe
+-- handle keyboard
+handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
+handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
+-- handle mouse
+handleEvent (EventKey (MouseButton LeftButton) Down _ point) universe = addParticleToUniverse universe point
+-- omit other Events
+handleEvent _ universe = universe
+
+
+
+-- ==== Implementation ====
+
 -- TODO determine parameters for users particles.
 -- For now use default one
 createParticle :: Point -- ^ 
@@ -19,13 +34,3 @@ addParticleToUniverse universe point = universe
   {
     fluid = createParticle point : fluid universe
   }
-
-
-handleEvent :: Event -> Universe -> Universe
--- handle keyboard
-handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-1000) universe
-handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 1000 universe
--- handle mouse
-handleEvent (EventKey (MouseButton LeftButton) Down _ point) universe = addParticleToUniverse universe point
--- omit other Events
-handleEvent _ universe = universe
