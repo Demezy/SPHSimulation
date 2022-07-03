@@ -28,11 +28,12 @@ type Cursor = Point
 data Particle = Particle
   { position :: Point
   , velocity :: Vector
+  , currentDensity :: Float
   , radius :: Float
   , config   :: FluidConfig
   }
 instance Show Particle where
-  show (Particle pos vel _ _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
+  show (Particle pos vel _ _ _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
 instance Eq Particle where
   (==) p1 p2 = position p1 == position p2
 

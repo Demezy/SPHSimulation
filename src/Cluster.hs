@@ -14,7 +14,7 @@ getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
 data Map = Visited Particle
          | NotVisited Particle
          | Noise      Particle
-         deriving (Show)
+         -- deriving (Show)
 
 instance Eq Map where
     p1 == p2 = position (particle p1) == position ( particle p2)

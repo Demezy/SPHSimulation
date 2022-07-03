@@ -2,14 +2,14 @@ module SampleUnits where
 
 import Graphics.Gloss
 import Objects
-import UsefulFunctions
 import QuadTree
 import SimulationModule
+import UsefulFunctions
 
 defaultEnvironment :: Environment
 defaultEnvironment =
   Environment
-    { timeMultiplier = 500,
+    { timeMultiplier = 50,
       directionOfGravity = (0, -1),
       gravityAcceleration = 1 / 10000,
       densityOfEnvironment = 1
@@ -31,6 +31,7 @@ sampleParticle =
   Particle
     { position = (0, 0),
       velocity = (0, 0),
+      currentDensity = 1,
       radius = 10,
       config = conf1
     }
@@ -40,6 +41,7 @@ sampleParticle2 =
   Particle
     { position = (1, 0),
       velocity = (0, 0),
+      currentDensity = 1,
       radius = 10,
       config = conf2
     }
@@ -51,9 +53,9 @@ conf1 =
       stiffness = 1,
       smoothingLength = 200,
       mass = 1,
-      viscosity = 1,
-      surfaceTension = 1,
-      friction = 0,
+      viscosity = 0.001,
+      surfaceTension = 0.001,
+      friction = 0.01,
       minSpeed = 0,
       densityKernel = kernelFunction0,
       pressureKernel = kernelFunction1,
@@ -77,6 +79,7 @@ conf2 =
       viscosityKernel = kernelFunction2,
       tensionKernel = kernelFunction0
     }
+
 wall1 :: (Point, Point) -> Wall
 wall1 (p1, p2) = Wall (p1, p2) renderWallGreen
   where
