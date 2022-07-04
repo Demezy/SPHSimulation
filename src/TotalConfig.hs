@@ -17,6 +17,7 @@ data TotalConfig = TotalConfig
     displaySmoothingLength :: Bool,
     displayVelocityVector :: Bool,
     velocityScalarVal :: Float,
+    displayQuadTree :: Bool,
     userInteractionCfg :: UserInteractionConfig
   }
 
@@ -30,6 +31,7 @@ defaultProgramConfig =
       displaySmoothingLength = False,
       displayVelocityVector = False,
       velocityScalarVal = 1,
+      displayQuadTree = False,
       userInteractionCfg = defaultUserInteractionCfg
     }
 
@@ -47,7 +49,8 @@ debugConfig =
 fullDebugConfig :: TotalConfig
 fullDebugConfig =
   debugConfig
-    { displaySmoothingLength = True
+    { displaySmoothingLength = True,
+      displayQuadTree = True
     }
 
 fancyConfig :: TotalConfig
@@ -58,4 +61,4 @@ fancyConfig =
     }
 
 ourProgramConfig :: TotalConfig
-ourProgramConfig = debugConfig
+ourProgramConfig = fullDebugConfig

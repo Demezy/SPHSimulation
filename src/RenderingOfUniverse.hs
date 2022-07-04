@@ -158,15 +158,16 @@ renderWalls solids = pictures (map renderWall solids)
 --     renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
 
 debugTree :: QuadTree Particle -> Picture
-debugTree tree = pictures (map renderBoundaries boundaries)
+debugTree tree 
+  | displayQuadTree ourProgramConfig = pictures (map renderBoundaries boundaries)
+  | otherwise = blank
   where
     boundaries = map properRectangle (getBoundaries tree)
     renderBoundaries (p1, p2) = color red (line [p1, (fst p2, snd p1), p2, (fst p1, snd p2)])
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderWalls solids 
-  -- <> debugTree (fluidAsTree universe)
+renderUniverse universe = renderParticles particles <> renderWalls solids <> debugTree (fluidAsTree universe)
   where
     particles = fluid universe
     solids = walls universe
