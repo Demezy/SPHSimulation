@@ -1,5 +1,7 @@
 module TimeModule where
 
+import Text.Printf
+import Debug.Trace
 import Objects
 import UsefulFunctions
 import Graphics.Gloss (Point, Vector)
@@ -25,7 +27,7 @@ getCollisions particle (w:ws)
 applyCollision :: Particle -> (Wall, Point, Float) -> Particle
 applyCollision particle (wall, (cx, cy), collisionDistance) = particle {position = new_pos, velocity = new_v}
   where
-    coef = 0.1
+    k = 1
     r = radius particle
     v = velocity particle
     (p1, p2) = pos wall
@@ -35,11 +37,17 @@ applyCollision particle (wall, (cx, cy), collisionDistance) = particle {position
     new_pos = (cx + px, cy + py)
     
     -- Change velocity if angle is proper
-    wall_vector = vectorDiff p1 p2
-    wall_component = vectorProjection wall_vector v
-    ortho = vectorDiff v wall_component
-    mul = vectorMul ortho (2 * coef)
-    new_v = if sameDirection (px, py) v then v else vectorDiff v mul
+    wallVector = vectorDiff p1 p2
+    wallComponent = vectorProjection wallVector v
+    -- ortho = vectorDiff v wallComponent
+    -- mul = vectorMul ortho (2 * k)
+    doubleWallComponent = vectorMul wallComponent 2
+
+    new_v' =
+      if sameDirection (px, py) v
+      then v
+      else vectorMul (vectorDiff doubleWallComponent v) (-1)
+    new_v = trace (printf "old: %s, new: %s, wall_component: %s" (show v)(show new_v') (show wallComponent)) new_v'
 
 -- | Apply collisions to particle:
 -- Apply shifts and change velocity
