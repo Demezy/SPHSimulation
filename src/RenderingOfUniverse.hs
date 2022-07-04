@@ -63,7 +63,8 @@ renderParticle particle = pictures (render 0 r oldColor) <> forcePic -- <> smoot
     dy = snd f
     scalor = 10000000
     p2 = ((dx * scalor), (dy * scalor))
-    forcePic = trace (show (p2)) (line [(0, 0), p2])
+    forcePic'= trace (show (p2)) forcePic'
+    forcePic = line [(0, 0), p2]
     oldColor = coloring (config particle)
     r = radius particle
 
