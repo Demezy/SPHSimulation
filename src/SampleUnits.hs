@@ -11,7 +11,7 @@ defaultEnvironment =
   Environment
     { timeMultiplier = 50,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 0.001,
+      gravityAcceleration = 0.000,
       densityOfEnvironment = 1
     }
 
@@ -33,7 +33,8 @@ sampleParticle =
       velocity = (0, 0),
       currentDensity = 1,
       radius = 10,
-      config = conf1
+      config = conf1,
+      force = (0, 0)
     }
 
 sampleParticle2 :: Particle

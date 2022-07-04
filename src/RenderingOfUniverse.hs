@@ -6,7 +6,7 @@ import Objects
 import UsefulFunctions
 import Metaballs
 import QuadTree
-
+import Debug.Trace
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -54,8 +54,16 @@ render from to oldColor = map renderCircle circleTuple
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 r oldColor)
+renderParticle particle = pictures (render 0 r oldColor) <> forcePic -- <> smoothingCircle
   where
+    ss = smoothingLength (config particle)
+    smoothingCircle = color red (circle ss)
+    f = force particle
+    dx = fst f
+    dy = snd f
+    scalor = 10000000
+    p2 = ((dx * scalor), (dy * scalor))
+    forcePic = trace (show (p2)) (line [(0, 0), p2])
     oldColor = coloring (config particle)
     r = radius particle
 

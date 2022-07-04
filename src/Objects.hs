@@ -31,9 +31,10 @@ data Particle = Particle
   , currentDensity :: Float
   , radius :: Float
   , config   :: FluidConfig
+  , force  :: Force
   }
 instance Show Particle where
-  show (Particle pos vel _ _ _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
+  show (Particle pos vel _ _ _ _) = "Position: " ++ show pos ++ "   |   " ++ "Velocity: " ++ show vel
 instance Eq Particle where
   (==) p1 p2 = position p1 == position p2
 
