@@ -139,7 +139,7 @@ contours shape cell = [(pt' a, pt' b) |
 
 ----------------------------------------------------------------------------
 listOfVectors :: [Particle] -> [Edge]
-listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-800,-600) (800, 600) 7
+listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-900,-600) (900, 600) 7
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> color blue (line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)]))) (listOfVectors particles)
