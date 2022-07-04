@@ -8,7 +8,7 @@ import Metaballs
 import QuadTree
 import Debug.Trace
 import TotalConfig
-import Graphics.Gloss (blank, Picture)
+import Graphics.Gloss.Interface.Pure.Game (Picture(Polygon))
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -74,10 +74,33 @@ renderForceOfParticle particle
     fv = color green (linePic (ff particle))
     gv = color magenta (linePic (gf particle))
     lineVec f = vectorMul f (forcesScalarVal ourProgramConfig)
-    linePic f = line [(0, 0), vec]
+    linePic f = drawLine vec
       where
         vec = lineVec f
 
+arrowHead :: Picture
+arrowHead = scale k k square 
+  where 
+    k = 5
+    square' = [
+      ( 1, -1),
+      ( 1,  1),
+      (-1,  1),
+      (-1, -1)
+      ]
+    square = Polygon square'
+
+drawLine :: Point -> Picture 
+drawLine position = line [(0, 0), position]
+
+renderVelocityOfParticle :: Particle -> Picture
+renderVelocityOfParticle particle
+ | displayVelocityVector ourProgramConfig =
+    color violet (drawLine (x, y) <> translate x y arrowHead)
+ | otherwise = blank
+    where
+      (x, y) = vectorMul (velocity particle) (velocityScalarVal  ourProgramConfig) 
+      -- (x, y) = velocity particle
 
 renderParticleItself :: Particle -- ^ 
   -> Picture
@@ -87,6 +110,7 @@ renderParticleItself particle = pictures (render 0 r oldColor)
     r = radius particle
 renderParticle particle
   = renderForceOfParticle particle 
+  <> renderVelocityOfParticle particle
   <> renderParticleSmoothingCircle particle
   <> renderParticleItself particle
 
