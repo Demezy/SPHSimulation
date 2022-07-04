@@ -47,7 +47,7 @@ sampleParticle2 =
     { position = (1, 0),
       velocity = (0, 0),
       currentDensity = 0,
-      radius = 10,
+      radius = 30,
       config = conf2
     }
 
