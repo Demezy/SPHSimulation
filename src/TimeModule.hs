@@ -25,6 +25,7 @@ getCollisions particle (w:ws)
 applyCollision :: Particle -> (Wall, Point, Float) -> Particle
 applyCollision particle (wall, (cx, cy), collisionDistance) = particle {position = new_pos, velocity = new_v}
   where
+    coef = 0.1
     r = radius particle
     v = velocity particle
     (p1, p2) = pos wall
@@ -35,7 +36,10 @@ applyCollision particle (wall, (cx, cy), collisionDistance) = particle {position
     
     -- Change velocity if angle is proper
     wall_vector = vectorDiff p1 p2
-    new_v = if sameDirection (px, py) v then v else vectorProjection wall_vector v
+    wall_component = vectorProjection wall_vector v
+    ortho = vectorDiff v wall_component
+    mul = vectorMul ortho (2 * coef)
+    new_v = if sameDirection (px, py) v then v else vectorDiff v mul
 
 -- | Apply collisions to particle:
 -- Apply shifts and change velocity
