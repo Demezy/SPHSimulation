@@ -142,7 +142,7 @@ listOfVectors :: [Particle] -> [Edge]
 listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 7
 
 vectorsToPicture :: [Particle] -> [Picture]
-vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
+vectorsToPicture particles = map (\e -> color blue (line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)]))) (listOfVectors particles)
 ----------------------------------------------------------------------------
 
 --listOfVectors :: [[Particle]] -> [Picture]
