@@ -6,15 +6,20 @@ import Objects
 import UsefulFunctions
 import SampleUnits
 import InitUniverse (uni)
+import TotalConfig
 
 
 
 -- ==== Game Logic ====
 
+
+timeStepArrow = timeStep . userInteractionCfg $ ourProgramConfig
 handleEvent :: Event -> Universe -> Universe
 -- handle keyboard
-handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe = changeTimeMul (-100) universe
-handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe = changeTimeMul 100 universe
+handleEvent (EventKey (SpecialKey KeyDown) Down _ _) universe =
+  changeTimeMul (- timeStepArrow ) universe
+handleEvent (EventKey (SpecialKey KeyUp) Down _ _) universe =
+  changeTimeMul timeStepArrow universe
 handleEvent (EventKey (SpecialKey KeySpace) Down _ _) universe = universe{
   environment = env{
     timeMultiplier = 0
