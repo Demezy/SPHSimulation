@@ -1,4 +1,6 @@
 dist-newstyle/
+test/
+.vim/
 .obsidian/
 .stack-work/
 .DS_Store
