@@ -19,7 +19,7 @@ uni =
         ]
     }
 
-sampleGridParticles = [sampleParticle {position = (x * mult, y * mult + 170)} | x <- [-d .. d], y <- [-d .. d]]
+sampleGridParticles = [sampleParticle {position = (100 + x * mult, y * mult + 170)} | x <- [-d .. d], y <- [-d .. d]]
   where
     n = 50
     mult = 60
