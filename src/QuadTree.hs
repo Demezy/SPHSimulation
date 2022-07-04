@@ -83,8 +83,10 @@ insertToQuadTree (Leaf capacity boundaries elements) getPosition element
   where
     subdivided = subdivideQuadTree getPosition (Leaf capacity boundaries elements)
     position = getPosition element
+    hasTheSamePosition = elem position (map getPosition elements)
     maybeInsertedElements =
-      if inRectangle boundaries position then element : elements else elements
+        if inRectangle boundaries position  && not hasTheSamePosition then element : elements else elements
+
 insertToQuadTree (Node boundary trees) getPosition element =
   Node boundary newTrees
   where
