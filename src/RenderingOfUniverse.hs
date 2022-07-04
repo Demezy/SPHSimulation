@@ -61,7 +61,10 @@ renderParticle particle = pictures (render 0 r oldColor) <> pictures [pv, vv, tv
     scalor = 1000000
 
     lineVec f = vectorMul (fst f, snd f) scalor
-    linePic f = trace (show (vec)) (line [(0, 0), vec])
+    linePic' f = trace (show (vec)) (line [(0, 0), vec])
+      where
+        vec = lineVec f
+    linePic f = line [(0, 0), vec]
       where
         vec = lineVec f
 

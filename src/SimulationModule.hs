@@ -1,5 +1,6 @@
 module SimulationModule where
 
+import Debug.Trace
 import Data.Maybe
 import Graphics.Gloss
 import Objects
@@ -82,6 +83,13 @@ particlePressure particleI envDensity densityI = k * (densityI - envDensity)
   where
     k = stiffness (config particleI)
 
+checkStupidVector :: String -> Vector -> Vector
+checkStupidVector msg vector = if ((isNaN x) || (isNaN y))
+      then trace (msg ++ show vector) vector
+      else vector
+      where
+        (x, y) = vector
+
 pressureForceFunc ::  Float -> Ai
 pressureForceFunc envDensity particleI particleJ = forceVector
   where
@@ -94,6 +102,8 @@ pressureForceFunc envDensity particleI particleJ = forceVector
     dir = vectorDiff (position particleJ) (position particleI)
 
     forceVector = normalizeVector dir absForce
+      
+
 
 viscosityForceFunc ::  Ai
 viscosityForceFunc particleI particleJ = forceVector
@@ -169,19 +179,21 @@ totalForce ::
   Particle -> -- Main particle
   Environment -> -- environment density
   Vector -- resulting force vector
-totalForce tree particleI env =
-  vectorSum
-    [
-      pressureForce particles particleI envDensity,
-      viscosityForce particles particleI,
-      tensionForce particles particleI,
-      frictionForce particleI, -- good
-      gravityForceOfParticle particleI env -- good
-    ]
-  where
-    envDensity = densityOfEnvironment env
-    particles = findNeighbours tree (position particleI) h
-    h = smoothingLength (config particleI)
+totalForce tree particleI env = res
+  where 
+    res' = vectorSum
+      [
+        pressureForce particles particleI envDensity,
+        viscosityForce particles particleI,
+        tensionForce particles particleI,
+        frictionForce particleI, -- good
+        gravityForceOfParticle particleI env -- good
+      ]
+      where
+        envDensity = densityOfEnvironment env
+        particles = findNeighbours tree (position particleI) h
+        h = smoothingLength (config particleI)
+    res = checkStupidVector "TOTAL FFORCE" res'
 
 -- O(n^2)
 -- densityMap = getDensityMap (getDensityDict particles) envDensity

@@ -130,6 +130,7 @@ deleteOutOfBounds particles
     debugInfo = printf "num: %d, vel: %s" deletedNumber $ foldr1 (++) $ map show $ filter (not . isPointInBounds) particles
     newParticles = filter isPointInBounds particles
     deletedNumber = length particles - length newParticles
+    isPointInBounds' _ = True 
     isPointInBounds p = abs x < limit && abs y < limit
       where
         (x, y) = position p
