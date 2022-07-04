@@ -1,11 +1,21 @@
-module TotalConfig (TotalConfig (..), ourProgramConfig) where
+module TotalConfig (TotalConfig (..), UserInteractionConfig(..), ourProgramConfig) where
+
+
+data UserInteractionConfig = UserInteractionConfig {
+    timeStep :: Float 
+  }
+
+defaultUserInteractionCfg = UserInteractionConfig {
+  timeStep = 100
+  }
 
 data TotalConfig = TotalConfig
   { showForces :: Bool,
     forcesScalarVal :: Float,
     meshRenderMode :: Bool,
     circleRenderMode :: Bool,
-    displaySmoothingLength :: Bool
+    displaySmoothingLength :: Bool,
+    userInteractionCfg :: UserInteractionConfig
   }
 
 defaultProgramConfig :: TotalConfig
@@ -15,7 +25,8 @@ defaultProgramConfig =
       forcesScalarVal = 1,
       meshRenderMode = True,
       circleRenderMode = False,
-      displaySmoothingLength = False
+      displaySmoothingLength = False,
+      userInteractionCfg =defaultUserInteractionCfg
     }
 
 debugConfig :: TotalConfig
