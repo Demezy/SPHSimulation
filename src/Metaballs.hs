@@ -46,12 +46,12 @@ shapes = collecting
 
 collecting :: [Particle] -> Shape
 collecting []       = circlee (0,0) 0
-collecting [x]      = circlee (dx, dy) 5
+collecting [x]      = circlee (dx, dy) 10
     where
         coordinate = position x
         dx = fst coordinate
         dy = snd coordinate
-collecting (x : xs) = circlee (dx, dy) 5 ∪ collecting xs
+collecting (x : xs) = circlee (dx, dy) 10 ∪ collecting xs
     where
         coordinate = position x
         dx = fst coordinate
@@ -139,7 +139,7 @@ contours shape cell = [(pt' a, pt' b) |
 
 ----------------------------------------------------------------------------
 listOfVectors :: [Particle] -> [Edge]
-listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 6
+listOfVectors particles = foldMap (contours (shapes particles)) $ collapse (shapes particles) $ buildTree (-500,-500) (500, 500) 7
 
 vectorsToPicture :: [Particle] -> [Picture]
 vectorsToPicture particles = map (\e -> line (bimap realToFrac realToFrac (fst e) : [bimap realToFrac realToFrac (snd e)])) (listOfVectors particles)
