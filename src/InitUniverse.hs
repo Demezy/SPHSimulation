@@ -7,7 +7,7 @@ import UsefulFunctions
 uni :: Universe
 uni =
   defaultUniverse
-    { fluid = sampleGridParticles ++ sampleParticles ++ imposterParticles,
+    { fluid = sampleGridParticles ++ sampleParticles,
       fluidAsTree = getParticleTree (sampleGridParticles ++ sampleParticles),
       walls =
         [
@@ -19,7 +19,7 @@ uni =
         ]
     }
 
-sampleGridParticles = [sampleParticle {position = (x * mult, y * mult + 170)} | x <- [-d .. d], y <- [-d .. d]]
+sampleGridParticles = [sampleParticle {position = (x * mult + 100, y * mult + 170)} | x <- [-d .. d], y <- [-d .. d]]
   where
     n = 50
     mult = 60
