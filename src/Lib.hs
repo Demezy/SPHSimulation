@@ -56,12 +56,27 @@ simulation dt universe =
     density = densityOfEnvironment env
     time = dt * timeMultiplier (environment universe)
     -- New values
-    particlesNew' = map (applyForces' . applyVelocity' . particleDensity') particlesOld
+    particlesNew' = map (applyForces' . applyVelocity' . particleDensity' . editParticleForcesConfig) particlesOld
     particlesNew = deleteOutOfBounds particlesNew'
     newTree = getParticleTree particlesNew
     -- Changing particles
     applyVelocity' p = applyVelocity p time (walls universe)
     applyForces' p = applyForce p (totalForce particlesAsTreeOld p env) time
+
+    editParticleForcesConfig p = p
+      { pf = pf' p,
+        vf = vf' p,
+        tf = tf' p,
+        ff = ff' p,
+        gf = gf' p
+      }
+
+    pf' p = pressureForce (oldNeighbours p) p envDensity
+    vf' p = viscosityForce (oldNeighbours p) p
+    tf' p = tensionForce (oldNeighbours p) p
+    ff' p = frictionForce p
+    gf' p = gravityForceOfParticle p env
+
     particleDensity' p = particleDensity (oldNeighbours p) p
     -- Helpful functions
     oldNeighbours p = findNeighbours particlesAsTreeOld (position p) (smoothingLength (config p))

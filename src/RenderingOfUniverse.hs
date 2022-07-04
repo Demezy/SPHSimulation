@@ -54,16 +54,25 @@ render from to oldColor = map renderCircle circleTuple
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 r oldColor) <> forcePic -- <> smoothingCircle
+renderParticle particle = pictures (render 0 r oldColor) <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
   where
     ss = smoothingLength (config particle)
     smoothingCircle = color red (circle ss)
-    f = force particle
-    dx = fst f
-    dy = snd f
-    scalor = 10000000
-    p2 = ((dx * scalor), (dy * scalor))
-    forcePic = trace (show (p2)) (line [(0, 0), p2])
+    scalor = 1000000
+
+    lineVec f = vectorMul (fst f, snd f) scalor
+    linePic f = trace (show (vec)) (line [(0, 0), vec])
+      where
+        vec = lineVec f
+
+    pv = color red (linePic (pf particle))
+    vv = color blue (linePic (vf particle))
+    tv = color black (linePic (tf particle))
+    fv = color green (linePic (ff particle))
+    gv = color orange (linePic (gf particle))
+
+--    forcePic = trace (show (p2)) (line [(0, 0), p2])
+
     oldColor = coloring (config particle)
     r = radius particle
 

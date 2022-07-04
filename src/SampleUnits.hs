@@ -34,7 +34,11 @@ sampleParticle =
       currentDensity = 1,
       radius = 10,
       config = conf1,
-      force = (0, 0)
+      pf = (0, 0),
+      vf = (0, 0),
+      tf = (0, 0),
+      ff = (0, 0),
+      gf = (0, 0)
     }
 
 sampleParticle2 :: Particle

@@ -57,8 +57,8 @@ applyVelocity p dt walls = new_p {position = (x', y')}
 applyForce :: Particle -> Force -> Float -> Particle
 applyForce particle force time =
   particle
-    { velocity = (newVX, newVY) ,
-      force = force
+    { velocity = (newVX, newVY)
+--      force = force
     }
   where
     newVX = deltaVX + oldVX
