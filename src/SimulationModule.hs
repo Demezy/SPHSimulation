@@ -175,8 +175,8 @@ totalForce tree particleI env =
       pressureForce particles particleI envDensity,
       viscosityForce particles particleI,
       tensionForce particles particleI,
-      frictionForce particleI,
-      gravityForceOfParticle particleI env
+      frictionForce particleI, -- good
+      gravityForceOfParticle particleI env -- good
     ]
   where
     envDensity = densityOfEnvironment env

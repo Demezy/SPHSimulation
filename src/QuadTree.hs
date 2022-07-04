@@ -2,6 +2,7 @@ module QuadTree where
 
 import Graphics.Gloss (Point)
 import Debug.Trace
+import Data.List
 
 data Circle = Circle Point Float deriving (Show, Eq)
 
@@ -111,9 +112,13 @@ insertManyToQuadTree tree getPosition = foldr insert' tree
 subdivideQuadTree :: (a -> Point) -> QuadTree a -> QuadTree a
 subdivideQuadTree _ tree@(Node _ _) = tree
 subdivideQuadTree getPosition leaf@(Leaf capacity boundaries elements) =
-  insertManyToQuadTree (Node boundaries leaves) getPosition elements
+  insertManyToQuadTree (Node boundaries (nextpermutation leaves)) getPosition elements
   where
     leaves = map (\b -> Leaf capacity b []) (quarterBoundaries boundaries)
+    nextpermutation [] = []
+    nextpermutation [x] = [x]
+    nextpermutation l = mconcat (take 1 (drop 1 (permutations l)))
+    
 
 -- | Rectangle into 4 rectangles given boundaries of initial rectangle
 quarterBoundaries :: Rectangle -> [Rectangle]

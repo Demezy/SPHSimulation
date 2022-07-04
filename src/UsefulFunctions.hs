@@ -45,7 +45,9 @@ vectorMul (x, y) a = (x * a, y * a)
 
 -- | Adjust vector to some length.
 normalizeVector :: Vector -> Float -> Vector
-normalizeVector (x, y) l = (x * k, y * k)
+normalizeVector (x, y) l
+  | (x, y) == (0, 0) || l == 0 = (0, 0)
+  | otherwise = (x * k, y * k)
   where
     k = l / vectorMagnitude (x, y)
 
@@ -122,7 +124,7 @@ getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
 
 deleteOutOfBounds :: [Particle] -> [Particle]
 deleteOutOfBounds particles  
-  | deletedNumber > 0 =trace (debugInfo) newParticles
+  | deletedNumber > 0 =trace debugInfo newParticles
   | otherwise = newParticles
   where
     debugInfo = printf "num: %d, vel: %s" deletedNumber $ foldr1 (++) $ map show $ filter (not . isPointInBounds) particles
