@@ -19,7 +19,7 @@ uni =
         ]
     }
 
-sampleGridParticles = [sampleParticle {position = (x * mult, y * mult)} | x <- [-d .. d], y <- [-d .. d]]
+sampleGridParticles = [sampleParticle {position = (x * mult, y * mult + 170)} | x <- [-d .. d], y <- [-d .. d]]
   where
     n = 50
     mult = 60
@@ -48,4 +48,4 @@ sampleParticles =
     n = 0
     angle x = (2 * pi * x) / n
     r = 400
-    y_pos = 50
+    y_pos = 75

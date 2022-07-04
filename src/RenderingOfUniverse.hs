@@ -54,7 +54,7 @@ render from to oldColor = map renderCircle circleTuple
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 r oldColor) <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
+renderParticle particle = pictures (render 0 r oldColor) -- <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
   where
     ss = smoothingLength (config particle)
     smoothingCircle = color red (circle ss)

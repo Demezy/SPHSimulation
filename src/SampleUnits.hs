@@ -11,7 +11,7 @@ defaultEnvironment =
   Environment
     { timeMultiplier = 50,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 0.04,
+      gravityAcceleration = 0.02,
       densityOfEnvironment = 1
     }
 
@@ -46,7 +46,7 @@ sampleParticle2 =
   Particle
     { position = (1, 0),
       velocity = (0, 0),
-      currentDensity = 1,
+      currentDensity = 0,
       radius = 10,
       config = conf2
     }
@@ -55,12 +55,12 @@ conf1 :: FluidConfig
 conf1 =
   FluidConfig
     { coloring = blue,
-      stiffness = 1e-3*3,
-      smoothingLength = 200,
+      stiffness = 1e-2,
+      smoothingLength = 100,
       mass = 1e-2,
       viscosity = 1,
-      surfaceTension = 5,
-      friction = 0.1,
+      surfaceTension = 3,
+      friction = 0.03,
       minSpeed = 0,
       densityKernel = kernelFunction0,
       pressureKernel = kernelFunction1,
