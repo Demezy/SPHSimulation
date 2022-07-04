@@ -71,7 +71,7 @@ particleDensity particles particleI =
   where
     kernelFunc = densityKernel (config particleI)
     h = smoothingLength (config particleI)
-    distanceTo p = vectorMagnitude (vectorDiff (position particleI) (position p))
+    distanceTo p = distance (position particleI) (position p)
     densityWithOneParticlue p = mass (config p) * kernelFunc (distanceTo p) h
 
 particlePressure ::
@@ -91,7 +91,9 @@ checkStupidVector msg vector = if ((isNaN x) || (isNaN y))
         (x, y) = vector
 
 pressureForceFunc ::  Float -> Ai
-pressureForceFunc envDensity particleI particleJ = forceVector
+pressureForceFunc envDensity particleI particleJ
+  | densityJ == 0 = (0, 0)
+  | otherwise = forceVector
   where
     densityI = currentDensity particleI
     densityJ = currentDensity particleJ
@@ -106,7 +108,9 @@ pressureForceFunc envDensity particleI particleJ = forceVector
 
 
 viscosityForceFunc ::  Ai
-viscosityForceFunc particleI particleJ = forceVector
+viscosityForceFunc particleI particleJ
+  | densityJ == 0 = (0, 0)
+  | otherwise = forceVector
   where
     densityJ = currentDensity particleJ
 
@@ -116,7 +120,9 @@ viscosityForceFunc particleI particleJ = forceVector
     forceVector = vectorMul vector multiplier
 
 tensionForceFunc ::  Ai
-tensionForceFunc particleI particleJ = forceVector
+tensionForceFunc particleI particleJ
+  | densityJ == 0 = (0, 0)
+  | otherwise = forceVector
   where
     densityJ = currentDensity particleJ
 

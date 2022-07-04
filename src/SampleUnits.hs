@@ -31,7 +31,7 @@ sampleParticle =
   Particle
     { position = (0, 0),
       velocity = (0, 0),
-      currentDensity = 1,
+      currentDensity = 0,
       radius = 10,
       config = conf1,
       pf = (0, 0),
@@ -54,7 +54,7 @@ sampleParticle2 =
 conf1 :: FluidConfig
 conf1 =
   FluidConfig
-    { coloring = black,
+    { coloring = blue,
       stiffness = 1e-3*3,
       smoothingLength = 200,
       mass = 1e-2,

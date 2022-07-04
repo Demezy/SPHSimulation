@@ -85,9 +85,13 @@ vectorsAngle (x0, y0) (x1, y1) = acos v_cos
 
 -- | True iff angle between vectors <= pi/2
 sameDirection :: Vector -> Vector -> Bool
-sameDirection (dx, dy) (px, py) = 0 <= v_cos && v_cos <= 1
+sameDirection (dx, dy) (px, py)
+  | p_length * d_length == 0 = True
+  | otherwise = 0 <= v_cos && v_cos <= 1
   where
-    v_cos = (px * dx + py * dy) / (vectorMagnitude (px, py) * vectorMagnitude (dx, dy))
+    p_length = vectorMagnitude (px, py)
+    d_length = vectorMagnitude (dx, dy)
+    v_cos = (px * dx + py * dy) / (p_length * d_length)
 
 -- | Find vector projection of A on B
 -- vectorProjection :: B -> A
