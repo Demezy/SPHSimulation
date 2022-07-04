@@ -54,7 +54,7 @@ render from to oldColor = map renderCircle circleTuple
 
 -- | Render Particle.
 renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 r oldColor) -- <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
+renderParticle particle = pictures (render 0 r oldColor) <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
   where
     ss = smoothingLength (config particle)
     smoothingCircle = color red (circle ss)
@@ -72,7 +72,7 @@ renderParticle particle = pictures (render 0 r oldColor) -- <> pictures [pv, vv,
     vv = color blue (linePic (vf particle))
     tv = color black (linePic (tf particle))
     fv = color green (linePic (ff particle))
-    gv = color magenta (linePic (gf particle))
+    gv = color orange (linePic (gf particle))
 
 --    forcePic = trace (show (p2)) (line [(0, 0), p2])
 
@@ -88,9 +88,9 @@ renderParticleAt particle = translate dx dy (renderParticle particle)
     dy = snd coordinate
 
 -- | Render all Particles into Universe.
-renderParticles :: [Particle] -> Picture
+-- renderParticles :: [Particle] -> Picture
 renderParticles particles = pictures (map renderParticleAt particles)
--- renderParticles particles = pictures (vectorsToPicture particles)
+renderParticles particles = pictures (vectorsToPicture particles)
 
 -- | Render Solid by itself.
 renderWall :: Wall -> Picture
