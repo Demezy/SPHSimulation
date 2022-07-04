@@ -11,7 +11,7 @@ defaultEnvironment =
   Environment
     { timeMultiplier = 50,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 0.000,
+      gravityAcceleration = 0.001,
       densityOfEnvironment = 1
     }
 
