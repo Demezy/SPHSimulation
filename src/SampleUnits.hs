@@ -9,16 +9,16 @@ import UsefulFunctions
 defaultEnvironment :: Environment
 defaultEnvironment =
   Environment
-    { timeMultiplier = 50,
+    { timeMultiplier = 10,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 0.02,
-      densityOfEnvironment = 1
+      gravityAcceleration = 9,
+      densityOfEnvironment = 10
     }
 
 defaultUniverse :: Universe
 defaultUniverse =
   Universe
-    { simulationScale = (0.001, 0.001),
+    { simulationScale = (1, 1),
       environment = defaultEnvironment,
       fluid = [],
       fluidAsTree = getParticleTree [],
@@ -31,7 +31,7 @@ sampleParticle =
   Particle
     { position = (0, 0),
       velocity = (0, 0),
-      currentDensity = 0,
+      currentDensity = 1000,
       radius = 10,
       config = conf1,
       pf = (0, 0),
@@ -55,12 +55,12 @@ conf1 :: FluidConfig
 conf1 =
   FluidConfig
     { coloring = blue,
-      stiffness = 1e-2,
+      stiffness = 0.003,
       smoothingLength = 100,
-      mass = 1e-2,
-      viscosity = 1,
-      surfaceTension = 3,
-      friction = 0.03,
+      mass = 0.03,
+      viscosity = 0.0003,
+      surfaceTension = 0.0006,
+      friction = 0.8,
       minSpeed = 0,
       densityKernel = kernelFunction0,
       pressureKernel = kernelFunction1,
