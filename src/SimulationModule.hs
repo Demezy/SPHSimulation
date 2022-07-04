@@ -43,7 +43,9 @@ particleValue ::
   KernelFunc -> -- kernel function
   Ai -> -- function to calculate force between 2 particles
   Vector -- resulting force vector
-particleValue neighbours particleI kernelFunc func = vectorSum (map itemResult neighbours)
+particleValue neighbours particleI kernelFunc func
+  | null neighbours = (0, 0)
+  | otherwise = vectorSum (map itemResult neighbours)
   where
     h = smoothingLength (config particleI)
     -- neighbours = findNeighbours particles (position particleI) h
