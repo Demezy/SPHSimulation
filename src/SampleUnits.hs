@@ -55,10 +55,10 @@ conf1 :: FluidConfig
 conf1 =
   FluidConfig
     { coloring = blue,
-      stiffness = 0.003,
+      stiffness = 0.03,
       smoothingLength = 100,
       mass = 0.03,
-      viscosity = 0.0003,
+      viscosity = 0.003,
       surfaceTension = 0.0006,
       friction = 0.8,
       minSpeed = 0,
