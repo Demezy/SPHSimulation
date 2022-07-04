@@ -44,7 +44,7 @@ glossExample = play window background fps initialWorld renderWorld handleWorld u
 simulation :: Float -> Universe -> Universe
 simulation dt universe =
   universe
-    { fluid = particlesNew,
+    { fluid = getElementsQuadTree newTree,
       fluidAsTree = newTree
     }
   where
