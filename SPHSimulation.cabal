@@ -35,6 +35,7 @@ library
       SampleUnits
       SimulationModule
       TimeModule
+      TotalConfig
       UsefulFunctions
       UserInteraction
   other-modules:

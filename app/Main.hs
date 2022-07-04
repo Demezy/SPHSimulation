@@ -12,6 +12,7 @@ import Cluster
 import UserInteraction
 import InitUniverse
 import SampleUnits
+import TotalConfig
 
 main :: IO ()
 main = glossExample
