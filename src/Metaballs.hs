@@ -150,4 +150,5 @@ vectorsToPicture particles = map (\e -> color blue (line (bimap realToFrac realT
 
 --vectorsToPicture :: [Particle] -> [Picture]
 --vectorsToPicture particles = listOfVectors (dbscan (getParticleTree particles) 1 0 (map NotVisited particles))
+
 --------------------------------------------------------------------------------
