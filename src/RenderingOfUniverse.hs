@@ -86,8 +86,8 @@ renderParticleAt particle = translate dx dy (renderParticle particle)
 
 -- | Render all Particles into Universe.
 renderParticles :: [Particle] -> Picture
-renderParticles particles = pictures (map renderParticleAt particles)
---renderParticles particles = pictures (vectorsToPicture particles)
+--renderParticles particles = pictures (map renderParticleAt particles)
+renderParticles particles = pictures (vectorsToPicture particles)
 
 -- | Render Solid by itself.
 renderWall :: Wall -> Picture
