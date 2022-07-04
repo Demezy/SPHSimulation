@@ -18,6 +18,7 @@ data TotalConfig = TotalConfig
     displayVelocityVector :: Bool,
     velocityScalarVal :: Float,
     displayQuadTree :: Bool,
+    displayUniverseInfo :: Bool,
     userInteractionCfg :: UserInteractionConfig
   }
 
@@ -32,6 +33,7 @@ defaultProgramConfig =
       displayVelocityVector = False,
       velocityScalarVal = 1,
       displayQuadTree = False,
+      displayUniverseInfo = True,
       userInteractionCfg = defaultUserInteractionCfg
     }
 
@@ -43,7 +45,8 @@ debugConfig =
       velocityScalarVal = 4,
       meshRenderMode = False,
       circleRenderMode = True,
-      displayVelocityVector = True
+      displayVelocityVector = True,
+      displayUniverseInfo = True
     }
 
 fullDebugConfig :: TotalConfig

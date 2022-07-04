@@ -147,15 +147,17 @@ renderWall wall = rendering wall
 renderWalls :: [Wall] -> Picture
 renderWalls solids = pictures (map renderWall solids)
 
--- renderDebugInfo :: Universe -> Picture
--- renderDebugInfo universe = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
---   where
---     margin = 20
---     scale = 0.1
---     renderValue (name, value) = Color white (Scale scale scale (Text (name ++ ": " ++ show value)))
---     moveToTopLeft = translate (-700) 400
---     moveDown = translate 0 (-margin)
---     renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
+renderUniverseInfo :: Universe -> Picture
+renderUniverseInfo universe 
+  | displayUniverseInfo ourProgramConfig = moveToTopLeft (renderValueList (zip (map show [1..]) (map show (fluid universe))))
+  | otherwise = blank
+  where
+    margin = 20
+    scale = 0.1
+    renderValue (name, value) = Color white (Scale scale scale (Text (name ++ ": " ++ show value)))
+    moveToTopLeft = translate (-700) 400
+    moveDown = translate 0 (-margin)
+    renderValueList = foldr (\value rendered -> moveDown rendered <> renderValue value) blank
 
 debugTree :: QuadTree Particle -> Picture
 debugTree tree 
@@ -167,7 +169,11 @@ debugTree tree
 
 -- | Render whole Universe.
 renderUniverse :: Universe -> Picture
-renderUniverse universe = renderParticles particles <> renderWalls solids <> debugTree (fluidAsTree universe)
+renderUniverse universe
+  = renderParticles particles
+  <> renderWalls solids
+  <> debugTree (fluidAsTree universe)
+  <> renderUniverseInfo universe
   where
     particles = fluid universe
     solids = walls universe
