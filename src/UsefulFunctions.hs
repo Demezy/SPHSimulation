@@ -1,5 +1,7 @@
 module UsefulFunctions where
 
+import Text.Printf
+import Debug.Trace
 import Graphics.Gloss
 import Objects
 import Data.Maybe
@@ -117,9 +119,15 @@ getParticleTree :: [Particle] -> QuadTree Particle
 getParticleTree = getTree 4 ((-2000, -2000), (2000, 2000)) position
 
 
+
 deleteOutOfBounds :: [Particle] -> [Particle]
-deleteOutOfBounds = filter isPointInBounds
+deleteOutOfBounds particles  
+  | deletedNumber > 0 =trace (debugInfo) newParticles
+  | otherwise = newParticles
   where
+    debugInfo = printf "num: %d, vel: %s" deletedNumber $ foldr1 (++) $ map show $ filter (not . isPointInBounds) particles
+    newParticles = filter isPointInBounds particles
+    deletedNumber = length particles - length newParticles
     isPointInBounds p = abs x < limit && abs y < limit
       where
         (x, y) = position p
