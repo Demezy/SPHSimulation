@@ -7,6 +7,8 @@ import UsefulFunctions
 import Metaballs
 import QuadTree
 import Debug.Trace
+import TotalConfig
+import Graphics.Gloss (blank, Picture)
 
 -- | This is standart interpolation functino that returns
 --   value between 2 given ones
@@ -52,32 +54,41 @@ render from to oldColor = map renderCircle circleTuple
     g = secondOfTuple rgba
     b = thirdOfTuple rgba
 
--- | Render Particle.
-renderParticle :: Particle -> Picture
-renderParticle particle = pictures (render 0 r oldColor) <> pictures [pv, vv, tv, fv, gv] -- <> smoothingCircle
+
+renderParticleSmoothingCircle :: Particle -> Picture
+renderParticleSmoothingCircle particle
+  | displaySmoothingLength ourProgramConfig = smoothingCircle
+  | otherwise = blank
   where
     ss = smoothingLength (config particle)
     smoothingCircle = color red (circle ss)
-    scalor = 1000000
 
-    lineVec f = vectorMul (fst f, snd f) scalor
-    linePic' f = trace (show (vec)) (line [(0, 0), vec])
-      where
-        vec = lineVec f
+renderForceOfParticle :: Particle -> Picture
+renderForceOfParticle particle 
+  | showForces ourProgramConfig = pictures [pv, vv, tv, fv, gv] 
+  | otherwise = blank
+  where
+    pv = color red (linePic (pf particle))
+    vv = color blue (linePic (vf particle))
+    tv = color yellow (linePic (tf particle))
+    fv = color green (linePic (ff particle))
+    gv = color magenta (linePic (gf particle))
+    lineVec f = vectorMul f (forcesScalarVal ourProgramConfig)
     linePic f = line [(0, 0), vec]
       where
         vec = lineVec f
 
-    pv = color red (linePic (pf particle))
-    vv = color blue (linePic (vf particle))
-    tv = color black (linePic (tf particle))
-    fv = color green (linePic (ff particle))
-    gv = color orange (linePic (gf particle))
 
---    forcePic = trace (show (p2)) (line [(0, 0), p2])
-
+renderParticleItself :: Particle -- ^ 
+  -> Picture
+renderParticleItself particle = pictures (render 0 r oldColor)
+  where
     oldColor = coloring (config particle)
     r = radius particle
+renderParticle particle
+  = renderForceOfParticle particle 
+  <> renderParticleSmoothingCircle particle
+  <> renderParticleItself particle
 
 -- | Render Particle at given coordinates.
 renderParticleAt :: Particle -> Picture
@@ -87,10 +98,20 @@ renderParticleAt particle = translate dx dy (renderParticle particle)
     dx = fst coordinate
     dy = snd coordinate
 
--- | Render all Particles into Universe.
--- renderParticles :: [Particle] -> Picture
-renderParticles particles = pictures (map renderParticleAt particles)
-renderParticles particles = pictures (vectorsToPicture particles)
+renderParticles :: [Particle] -> Picture
+renderParticles ps
+  = renderParticlesAsCircles ps
+  <> renderParticlesAsMesh ps
+
+renderParticlesAsCircles :: [Particle] -> Picture
+renderParticlesAsCircles ps 
+  |circleRenderMode ourProgramConfig =  pictures (map renderParticleAt ps)
+  | otherwise = blank
+
+renderParticlesAsMesh :: [Particle] -> Picture  
+renderParticlesAsMesh ps 
+  | meshRenderMode ourProgramConfig = pictures( vectorsToPicture  ps)
+  | otherwise = blank
 
 -- | Render Solid by itself.
 renderWall :: Wall -> Picture
