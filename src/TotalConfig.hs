@@ -1,13 +1,13 @@
-module TotalConfig (TotalConfig (..), UserInteractionConfig(..), ourProgramConfig) where
+module TotalConfig (TotalConfig (..), UserInteractionConfig (..), ourProgramConfig) where
 
-
-data UserInteractionConfig = UserInteractionConfig {
-    timeStep :: Float 
+data UserInteractionConfig = UserInteractionConfig
+  { timeStep :: Float
   }
 
-defaultUserInteractionCfg = UserInteractionConfig {
-  timeStep = 100
-  }
+defaultUserInteractionCfg =
+  UserInteractionConfig
+    { timeStep = 10
+    }
 
 data TotalConfig = TotalConfig
   { showForces :: Bool,
@@ -15,6 +15,8 @@ data TotalConfig = TotalConfig
     meshRenderMode :: Bool,
     circleRenderMode :: Bool,
     displaySmoothingLength :: Bool,
+    displayVelocityVector :: Bool,
+    velocityScalarVal :: Float,
     userInteractionCfg :: UserInteractionConfig
   }
 
@@ -26,16 +28,20 @@ defaultProgramConfig =
       meshRenderMode = True,
       circleRenderMode = False,
       displaySmoothingLength = False,
-      userInteractionCfg =defaultUserInteractionCfg
+      displayVelocityVector = False,
+      velocityScalarVal = 1,
+      userInteractionCfg = defaultUserInteractionCfg
     }
 
 debugConfig :: TotalConfig
 debugConfig =
   defaultProgramConfig
     { showForces = True,
-      forcesScalarVal = 10000 * 2,
+      forcesScalarVal = 10000 * 4,
+      velocityScalarVal = 4,
       meshRenderMode = False,
-      circleRenderMode = True
+      circleRenderMode = True,
+      displayVelocityVector = True
     }
 
 fullDebugConfig :: TotalConfig
@@ -52,4 +58,4 @@ fancyConfig =
     }
 
 ourProgramConfig :: TotalConfig
-ourProgramConfig = fancyConfig
+ourProgramConfig = debugConfig
