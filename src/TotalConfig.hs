@@ -22,7 +22,7 @@ debugConfig :: TotalConfig
 debugConfig =
   defaultProgramConfig
     { showForces = True,
-      forcesScalarVal = 10000,
+      forcesScalarVal = 10000 * 2,
       meshRenderMode = False,
       circleRenderMode = True
     }
@@ -41,4 +41,4 @@ fancyConfig =
     }
 
 ourProgramConfig :: TotalConfig
-ourProgramConfig = debugConfig
+ourProgramConfig = fancyConfig
