@@ -11,7 +11,7 @@ defaultEnvironment =
   Environment
     { timeMultiplier = 50,
       directionOfGravity = (0, -1),
-      gravityAcceleration = 0,
+      gravityAcceleration = 0.001,
       densityOfEnvironment = 1
     }
 
@@ -55,7 +55,7 @@ conf1 =
       mass = 1e-2,
       viscosity = 0.5,
       surfaceTension = 0.3,
-      friction = 1e-2,
+      friction = 0,
       minSpeed = 0,
       densityKernel = kernelFunction0,
       pressureKernel = kernelFunction1,

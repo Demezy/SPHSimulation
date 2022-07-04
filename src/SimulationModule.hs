@@ -11,13 +11,19 @@ type Ai = (Particle -> Particle -> Vector)
 type DensityMap = (Particle -> Float)
 
 kernelFunction0 :: KernelFunc
-kernelFunction0 r h = (315 / (64 * pi * (h ** 9))) * (((h ** 2) - (r ** 2)) ** 3)
+kernelFunction0 r h
+  | 0 <= r && r <= h = (315 / (64 * pi * (h ** 9))) * (((h ** 2) - (r ** 2)) ** 3)
+  | otherwise = 0
 
 kernelFunction1 :: KernelFunc
-kernelFunction1 r h = (-(315 / (64 * pi * (h ** 9)))) * (6 * r) * ((h ** 2) - (r ** 2)) ** 2
+kernelFunction1 r h
+  | 0 <= r && r <= h = (-(315 / (64 * pi * (h ** 9)))) * (6 * r) * ((h ** 2) - (r ** 2)) ** 2
+  | otherwise = 0
 
 kernelFunction2 :: KernelFunc
-kernelFunction2 r h = (315 / (64 * pi * (h ** 9))) * 6 * ((h ** 2) - (r ** 2)) * (4 * (r ** 2) - ((h ** 2) - (r ** 2)))
+kernelFunction2 r h
+  | 0 <= r && r <= h = (315 / (64 * pi * (h ** 9))) * 6 * ((h ** 2) - (r ** 2)) * (4 * (r ** 2) - ((h ** 2) - (r ** 2)))
+  | otherwise = 0
 
 kernelFunctionIncompressible :: KernelFunc
 kernelFunctionIncompressible r h
@@ -167,8 +173,8 @@ totalForce tree particleI env =
       pressureForce particles particleI envDensity,
       viscosityForce particles particleI,
       tensionForce particles particleI,
-      frictionForce particleI
-      -- gravityForceOfParticle particleI env
+      frictionForce particleI,
+      gravityForceOfParticle particleI env
     ]
   where
     envDensity = densityOfEnvironment env
