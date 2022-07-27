@@ -4,10 +4,15 @@
 	</p>
 </h1>
 
+
+## 📚 Project Description
 Smothered-particle hydrodynamics simulation of liquids written in
 Haskell.
 
-## Quick start
+## 🎬 Demo
+![Teaser](https://imgur.com/2FrzZui.gif)
+
+## 🚀 Quick start
 
 To build and run the project using Stack use:
 
@@ -35,7 +40,7 @@ Arch Linux:
 sudo pacman -Sy --noconfirm freeglut
 ```
 
-## Development
+## ⚙️ Development
 
 ### Adding new file
 
